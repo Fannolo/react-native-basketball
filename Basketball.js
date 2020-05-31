@@ -14,7 +14,10 @@ import Floor from './components/Floor';
 import Emoji from './components/Emoji';
 import Score from './components/Score';
 
+import ReactNativeHapticFeedback from 'react-native-haptic-feedback';
+
 import Vector from './utils/Vector';
+const Sound = require('react-native-sound');
 
 // physical variables
 const gravity = 0.6; // gravity
@@ -43,9 +46,34 @@ const LC_BOUNCING = 3;
 const LC_RESTARTING = 4;
 const LC_RESTARTING_FALLING = 5;
 
+const FeedBackOptions = {
+  enableVibrateFallback: true,
+  ignoreAndroidSystemSettings: false,
+};
+
 class Basketball extends Component {
   constructor(props) {
     super(props);
+
+    this.backBoard = new Sound(
+      require('./assets/sounds/Back+Board.mp3'),
+      (error) => {
+        if (error) {
+          console.log('failed to load the sound', error);
+          return;
+        }
+      },
+    );
+
+    this.swishSound = new Sound(
+      require('./assets/sounds/Swish+2.mp3'),
+      (error) => {
+        if (error) {
+          console.log('failed to load the sound', error);
+          return;
+        }
+      },
+    );
 
     this.interval = null;
 
@@ -197,13 +225,17 @@ class Basketball extends Component {
       mass: 10,
     };
 
-    const isLeftCollision = this.circlesColliding(ball, netLeftBorder);
+    const isLeftCollision = this.circlesColliding(ball, netLeftBorder );
     if (isLeftCollision) {
+      this.backBoard.play();
+      ReactNativeHapticFeedback.trigger('impactLight', FeedBackOptions);
       nextState.lifecycle = LC_BOUNCING;
       this.updateCollisionVelocity(nextState, ball, netLeftBorder);
     } else {
       const isRightCollision = this.circlesColliding(ball, netRightBorder);
       if (isRightCollision) {
+        this.backBoard.play();
+        ReactNativeHapticFeedback.trigger('impactLight', FeedBackOptions);
         nextState.lifecycle = LC_BOUNCING;
         this.updateCollisionVelocity(nextState, ball, netRightBorder);
       }
@@ -243,6 +275,8 @@ class Basketball extends Component {
           nextState.x + radius <
             NET_RIGHT_BORDER_X + this.state.randomNetXPosition
         ) {
+          this.swishSound.play();
+          ReactNativeHapticFeedback.trigger('impactMedium', FeedBackOptions);
           nextState.scored = true;
           nextState.score += 1;
         } else {
