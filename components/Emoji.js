@@ -61,7 +61,7 @@ class Emoji extends Component {
             bottom: this.props.y,
             width: 100,
             height: 100,
-            left: Dimensions.get('window').width / 2 - 50,
+            left: this.props.x,
           },
         ]}>
         <Animated.Text
@@ -91,6 +91,7 @@ const styles = StyleSheet.create({
 
 Emoji.defaultProps = {
   y: 0,
+  x: 0,
   scored: null,
 };
 

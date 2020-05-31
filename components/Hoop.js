@@ -10,6 +10,7 @@ class Hoop extends Component {
           styles.hoopContainer,
           {
             bottom: this.props.y,
+            left: this.props.x,
           },
         ]}>
         <View style={styles.hoopContained} />
@@ -21,7 +22,7 @@ class Hoop extends Component {
 const styles = StyleSheet.create({
   hoopContainer: {
     position: 'absolute',
-    left: Dimensions.get('window').width / 2 - 200 / 2,
+    // left: ,
     width: 200,
     height: 112,
     alignItems: 'center',

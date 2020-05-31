@@ -1,5 +1,11 @@
 import React, {Component} from 'react';
-import {StyleSheet, View, Dimensions, SafeAreaView} from 'react-native';
+import {
+  StyleSheet,
+  View,
+  Dimensions,
+  SafeAreaView,
+  AsyncStorage,
+} from 'react-native';
 
 import Ball from './components/Ball';
 import Hoop from './components/Hoop';
@@ -12,7 +18,7 @@ import Vector from './utils/Vector';
 
 // physical variables
 const gravity = 0.6; // gravity
-const radius = 48; // ball radius
+const radius = 50; // ball radius
 const rotationFactor = 10; // ball rotation factor
 
 // components sizes and positions
@@ -23,6 +29,7 @@ const NET_HEIGHT = 6;
 const NET_WIDTH = 83;
 const NET_Y = Dimensions.get('window').height - 216;
 const NET_X = Dimensions.get('window').width / 2 - NET_WIDTH / 2;
+const EMOJI_X = Dimensions.get('window').width / 2 - 50;
 const NET_LEFT_BORDER_X = NET_X + NET_HEIGHT / 2;
 const NET_LEFT_BORDER_Y = NET_Y;
 const NET_RIGHT_BORDER_X = NET_X + NET_WIDTH - NET_HEIGHT / 2;
@@ -53,6 +60,8 @@ class Basketball extends Component {
       lifecycle: LC_WAITING,
       scored: null,
       score: 0,
+      randomNetYPosition: 0,
+      randomNetXPosition: 0,
     };
   }
 
@@ -160,8 +169,8 @@ class Basketball extends Component {
       mass: 2,
     };
     const netLeftBorder = {
-      x: NET_LEFT_BORDER_X,
-      y: NET_LEFT_BORDER_Y,
+      x: NET_LEFT_BORDER_X + this.state.randomNetXPosition,
+      y: NET_LEFT_BORDER_Y + this.state.randomNetYPosition,
       radius: NET_HEIGHT / 2,
       velocity: {
         getX() {
@@ -174,8 +183,8 @@ class Basketball extends Component {
       mass: 10,
     };
     const netRightBorder = {
-      x: NET_RIGHT_BORDER_X,
-      y: NET_RIGHT_BORDER_Y,
+      x: NET_RIGHT_BORDER_X + this.state.randomNetXPosition,
+      y: NET_RIGHT_BORDER_Y + this.state.randomNetYPosition,
       radius: NET_HEIGHT / 2,
       velocity: {
         getX() {
@@ -223,12 +232,16 @@ class Basketball extends Component {
 
     if (this.state.scored === null) {
       if (
-        this.state.y + radius > NET_Y + NET_HEIGHT / 2 &&
-        nextState.y + radius < NET_Y + NET_HEIGHT / 2
+        this.state.y + radius >
+          NET_Y + NET_HEIGHT / 2 + this.state.randomNetYPosition &&
+        nextState.y + radius <
+          NET_Y + NET_HEIGHT / 2 + this.state.randomNetYPosition
       ) {
         if (
-          nextState.x + radius > NET_LEFT_BORDER_X &&
-          nextState.x + radius < NET_RIGHT_BORDER_X
+          nextState.x + radius >
+            NET_LEFT_BORDER_X + this.state.randomNetXPosition &&
+          nextState.x + radius <
+            NET_RIGHT_BORDER_X + this.state.randomNetXPosition
         ) {
           nextState.scored = true;
           nextState.score += 1;
@@ -257,6 +270,10 @@ class Basketball extends Component {
 
   updateRotate(nextState) {
     nextState.rotate = this.state.rotate + nextState.vx * rotationFactor;
+  }
+
+  getRandomInt(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
   }
 
   handleRestart(nextState) {
@@ -299,6 +316,8 @@ class Basketball extends Component {
           4,
           Dimensions.get('window').width - radius * 2 - 4,
         );
+        nextState.randomNetXPosition = this.getRandomInt(-100, 100);
+        nextState.randomNetYPosition = this.getRandomInt(-150, 20);
       } else {
         // nextState.x = Dimensions.get('window').width / 2 - radius;
         nextState.x = this.randomIntFromInterval(
@@ -317,6 +336,20 @@ class Basketball extends Component {
     }
   }
 
+  async updateHighScore(nextState) {
+    if (nextState.scored === false) {
+      let highScore = await AsyncStorage.getItem('highScore');
+      console.log('highscore  is: ', highScore);
+      if (JSON.stringify(this.state.score) > highScore || !highScore) {
+        console.log('highscore  is: ', highScore);
+        await AsyncStorage.setItem(
+          'highScore',
+          JSON.stringify(this.state.score),
+        );
+      }
+    }
+  }
+
   update() {
     if (this.state.lifecycle === LC_WAITING) return;
 
@@ -329,13 +362,21 @@ class Basketball extends Component {
 
     this.handleCollision(nextState);
     this.handleRestart(nextState);
+    this.updateHighScore(nextState);
 
     this.setState(nextState);
   }
 
   renderNet(render) {
     if (render === true) {
-      return <Net y={NET_Y} x={NET_X} height={NET_HEIGHT} width={NET_WIDTH} />;
+      return (
+        <Net
+          y={NET_Y + this.state.randomNetYPosition}
+          x={NET_X + this.state.randomNetXPosition}
+          height={NET_HEIGHT}
+          width={NET_WIDTH}
+        />
+      );
     }
     return null;
   }
@@ -363,7 +404,14 @@ class Basketball extends Component {
             score={this.state.score}
             scored={this.state.scored}
           />
-          <Hoop y={HOOP_Y} />
+          <Hoop
+            y={HOOP_Y + this.state.randomNetYPosition}
+            x={
+              Dimensions.get('window').width / 2 -
+              200 / 2 +
+              this.state.randomNetXPosition
+            }
+          />
           {this.renderNet(this.state.lifecycle === LC_STARTING)}
           {this.renderFloor(this.state.vy <= 0)}
           <Ball
@@ -376,7 +424,11 @@ class Basketball extends Component {
           />
           {this.renderNet(this.state.lifecycle !== LC_STARTING)}
           {this.renderFloor(this.state.vy > 0)}
-          <Emoji y={NET_Y} scored={this.state.scored} />
+          <Emoji
+            y={NET_Y + this.state.randomNetYPosition}
+            x={EMOJI_X + this.state.randomNetXPosition}
+            scored={this.state.scored}
+          />
         </View>
       </SafeAreaView>
     );
