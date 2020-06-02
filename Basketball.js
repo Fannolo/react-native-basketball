@@ -476,40 +476,42 @@ class Basketball extends Component {
 
   render() {
     return (
-      //   <SafeAreaView style={styles.container} forceInset={{bottom: 100}}>
-      <View style={styles.container}>
-        <Score
-          y={FLOOR_HEIGHT * 6}
-          score={this.state.score}
-          scored={this.state.scored}
-        />
-        <Hoop
-          y={HOOP_Y + this.state.randomNetYPosition}
-          x={
-            Dimensions.get('window').width / 2 -
-            200 / 2 +
-            this.state.randomNetXPosition
-          }
-        />
-        {this.renderNet(this.state.lifecycle === LC_STARTING)}
-        {this.renderFloor(this.state.vy <= 0)}
-        <Ball
-          onStart={this.onStart.bind(this)}
-          x={this.state.x}
-          y={this.state.y}
-          radius={radius}
-          rotate={this.state.rotate}
-          scale={this.state.scale}
-        />
-        {this.renderNet(this.state.lifecycle !== LC_STARTING)}
-        {this.renderFloor(this.state.vy > 0)}
-        <Emoji
-          y={NET_Y + this.state.randomNetYPosition}
-          x={EMOJI_X + this.state.randomNetXPosition}
-          scored={this.state.scored}
-        />
+      <View style={{backgroundColor: '#F4F4F4', flex: 1}}>
+        <SafeAreaView style={styles.container} forceInset={{bottom: 0}}>
+          <View style={styles.container}>
+            <Score
+              y={FLOOR_HEIGHT * 6}
+              score={this.state.score}
+              scored={this.state.scored}
+            />
+            <Hoop
+              y={HOOP_Y + this.state.randomNetYPosition}
+              x={
+                Dimensions.get('window').width / 2 -
+                200 / 2 +
+                this.state.randomNetXPosition
+              }
+            />
+            {this.renderNet(this.state.lifecycle === LC_STARTING)}
+            {this.renderFloor(this.state.vy <= 0)}
+            <Ball
+              onStart={this.onStart.bind(this)}
+              x={this.state.x}
+              y={this.state.y}
+              radius={radius}
+              rotate={this.state.rotate}
+              scale={this.state.scale}
+            />
+            {this.renderNet(this.state.lifecycle !== LC_STARTING)}
+            {this.renderFloor(this.state.vy > 0)}
+            <Emoji
+              y={NET_Y + this.state.randomNetYPosition}
+              x={EMOJI_X + this.state.randomNetXPosition}
+              scored={this.state.scored}
+            />
+          </View>
+        </SafeAreaView>
       </View>
-      //   </SafeAreaView>
     );
   }
 }
