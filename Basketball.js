@@ -25,7 +25,7 @@ const radius = 50; // ball radius
 const rotationFactor = 10; // ball rotation factor
 
 // components sizes and positions
-const FLOOR_HEIGHT = 48;
+const FLOOR_HEIGHT = 60;
 const FLOOR_Y = 11;
 const HOOP_Y = Dimensions.get('window').height - 227;
 const NET_HEIGHT = 6;
@@ -35,7 +35,7 @@ const NET_X = Dimensions.get('window').width / 2 - NET_WIDTH / 2;
 const EMOJI_X = Dimensions.get('window').width / 2 - 50;
 const NET_LEFT_BORDER_X = NET_X + NET_HEIGHT / 2;
 const NET_LEFT_BORDER_Y = NET_Y;
-const NET_RIGHT_BORDER_X = NET_X + NET_WIDTH - NET_HEIGHT / 2;
+const NET_RIGHT_BORDER_X = NET_X + NET_WIDTH + NET_HEIGHT / 2;
 const NET_RIGHT_BORDER_Y = NET_LEFT_BORDER_Y;
 
 // ball lifecycle
@@ -56,7 +56,7 @@ class Basketball extends Component {
     super(props);
 
     this.backBoard = new Sound(
-      require('./assets/sounds/Back+Board.mp3'),
+      require('./assets/sounds/backboard.mp3'),
       (error) => {
         if (error) {
           console.log('failed to load the sound', error);
@@ -66,7 +66,27 @@ class Basketball extends Component {
     );
 
     this.swishSound = new Sound(
-      require('./assets/sounds/Swish+2.mp3'),
+      require('./assets/sounds/swoosh1.mp3'),
+      (error) => {
+        if (error) {
+          console.log('failed to load the sound', error);
+          return;
+        }
+      },
+    );
+
+    this.failure = new Sound(
+      require('./assets/sounds/failure1.mp3'),
+      (error) => {
+        if (error) {
+          console.log('failed to load the sound', error);
+          return;
+        }
+      },
+    );
+
+    this.failedAfter20Times = new Sound(
+      require('./assets/sounds/losingAfter20times.mp3'),
       (error) => {
         if (error) {
           console.log('failed to load the sound', error);
@@ -129,7 +149,6 @@ class Basketball extends Component {
     return false;
   }
 
-  // Inspired by http://www.adambrookesprojects.co.uk/project/canvas-collision-elastic-collision-tutorial/
   updateCollisionVelocity(nextState, ball, netBorder) {
     const xDistance = netBorder.x - ball.x;
     const yDistance = netBorder.y - ball.y;
@@ -137,7 +156,7 @@ class Basketball extends Component {
     normalVector = normalVector.normalise();
 
     const tangentVector = new Vector(
-      normalVector.getY() * -1,
+      normalVector.getY() * 1,
       normalVector.getX(),
     );
 
@@ -150,7 +169,7 @@ class Basketball extends Component {
 
     const ballScalarNormalAfter =
       (ballScalarNormal * (ball.mass - netBorder.mass) +
-        2 * netBorder.mass * netScalarNormal) /
+        10 * netBorder.mass * netScalarNormal) /
       (ball.mass + netBorder.mass);
 
     const ballScalarNormalAfterVector = normalVector.multiply(
@@ -162,11 +181,22 @@ class Basketball extends Component {
       ballScalarNormalAfterVector,
     );
 
-    if (ball.y < NET_Y + NET_HEIGHT / 2) {
-      nextState.vx = nextVelocity.x;
+    //Se l'altezza della palla è minore rispetto alla posizione in cui si trova il canestro allora sposta la palla a destra altrimenti a sinistra
+
+    if (
+      (ball.x > NET_LEFT_BORDER_X + this.state.randomNetXPosition &&
+        ball.x < NET_RIGHT_BORDER_X + this.state.randomNetXPosition) ||
+      ball.y < NET_Y + this.state.randomNetYPosition + NET_HEIGHT / 2
+    ) {
+      nextState.vx = nextVelocity.x * 2.5;
     } else {
-      nextState.vx = -nextVelocity.x;
+      nextState.vx = -nextVelocity.x * 2.5;
     }
+    // if (ball.y < NET_Y + this.state.randomNetYPosition + NET_HEIGHT / 2) {
+    //   nextState.vx = nextVelocity.x + 10;
+    // } else {
+    //   nextState.vx = -nextVelocity.x - 10;
+    // }
 
     nextState.vy = nextVelocity.y;
     nextState.x = this.state.x + nextState.vx;
@@ -194,7 +224,7 @@ class Basketball extends Component {
           return _self.state.vy;
         },
       },
-      mass: 2,
+      mass: 5,
     };
     const netLeftBorder = {
       x: NET_LEFT_BORDER_X + this.state.randomNetXPosition,
@@ -225,7 +255,7 @@ class Basketball extends Component {
       mass: 10,
     };
 
-    const isLeftCollision = this.circlesColliding(ball, netLeftBorder );
+    const isLeftCollision = this.circlesColliding(ball, netLeftBorder);
     if (isLeftCollision) {
       this.backBoard.play();
       ReactNativeHapticFeedback.trigger('impactLight', FeedBackOptions);
@@ -244,7 +274,10 @@ class Basketball extends Component {
 
   updateVelocity(nextState) {
     nextState.vx = this.state.vx;
-    if (nextState.lifecycle === LC_STARTING && nextState.y < NET_Y - 200) {
+    if (
+      nextState.lifecycle === LC_STARTING &&
+      nextState.y < NET_Y + this.state.randomNetYPosition - 200
+    ) {
       nextState.vy = this.state.vy;
     } else {
       nextState.vy = this.state.vy + gravity;
@@ -353,6 +386,8 @@ class Basketball extends Component {
         nextState.randomNetXPosition = this.getRandomInt(-100, 100);
         nextState.randomNetYPosition = this.getRandomInt(-150, 20);
       } else {
+        this.setState({ciao: true});
+        this.failure.play();
         // nextState.x = Dimensions.get('window').width / 2 - radius;
         nextState.x = this.randomIntFromInterval(
           4,
@@ -360,7 +395,7 @@ class Basketball extends Component {
         );
         nextState.score = 0;
       }
-
+      this.setState({ciao: false});
       // nextState.x = Dimensions.get('window').width / 2 - radius;
       nextState.vy = -8;
       nextState.vx = 0;
@@ -372,10 +407,20 @@ class Basketball extends Component {
 
   async updateHighScore(nextState) {
     if (nextState.scored === false) {
+      //   let totalLosing = await AsyncStorage.getItem('highScoreLosing');
+      //   if (totalLosing !== undefined) {
+      //     totalLosing = parseInt(totalLosing);
+      //     if (totalLosing === 2) {
+      //       this.failedAfter20Times.play();
+      //     }
+      //     totalLosing += 1;
+      //     await AsyncStorage.setItem('highScoreLosing', String(0));
+      //   } else {
+      //     await AsyncStorage.setItem('highScoreLosing', String(0));
+      //   }
+
       let highScore = await AsyncStorage.getItem('highScore');
-      console.log('highscore  is: ', highScore);
       if (JSON.stringify(this.state.score) > highScore || !highScore) {
-        console.log('highscore  is: ', highScore);
         await AsyncStorage.setItem(
           'highScore',
           JSON.stringify(this.state.score),
@@ -431,40 +476,40 @@ class Basketball extends Component {
 
   render() {
     return (
-      <SafeAreaView style={styles.container}>
-        <View style={styles.container}>
-          <Score
-            y={FLOOR_HEIGHT * 6}
-            score={this.state.score}
-            scored={this.state.scored}
-          />
-          <Hoop
-            y={HOOP_Y + this.state.randomNetYPosition}
-            x={
-              Dimensions.get('window').width / 2 -
-              200 / 2 +
-              this.state.randomNetXPosition
-            }
-          />
-          {this.renderNet(this.state.lifecycle === LC_STARTING)}
-          {this.renderFloor(this.state.vy <= 0)}
-          <Ball
-            onStart={this.onStart.bind(this)}
-            x={this.state.x}
-            y={this.state.y}
-            radius={radius}
-            rotate={this.state.rotate}
-            scale={this.state.scale}
-          />
-          {this.renderNet(this.state.lifecycle !== LC_STARTING)}
-          {this.renderFloor(this.state.vy > 0)}
-          <Emoji
-            y={NET_Y + this.state.randomNetYPosition}
-            x={EMOJI_X + this.state.randomNetXPosition}
-            scored={this.state.scored}
-          />
-        </View>
-      </SafeAreaView>
+      //   <SafeAreaView style={styles.container} forceInset={{bottom: 100}}>
+      <View style={styles.container}>
+        <Score
+          y={FLOOR_HEIGHT * 6}
+          score={this.state.score}
+          scored={this.state.scored}
+        />
+        <Hoop
+          y={HOOP_Y + this.state.randomNetYPosition}
+          x={
+            Dimensions.get('window').width / 2 -
+            200 / 2 +
+            this.state.randomNetXPosition
+          }
+        />
+        {this.renderNet(this.state.lifecycle === LC_STARTING)}
+        {this.renderFloor(this.state.vy <= 0)}
+        <Ball
+          onStart={this.onStart.bind(this)}
+          x={this.state.x}
+          y={this.state.y}
+          radius={radius}
+          rotate={this.state.rotate}
+          scale={this.state.scale}
+        />
+        {this.renderNet(this.state.lifecycle !== LC_STARTING)}
+        {this.renderFloor(this.state.vy > 0)}
+        <Emoji
+          y={NET_Y + this.state.randomNetYPosition}
+          x={EMOJI_X + this.state.randomNetXPosition}
+          scored={this.state.scored}
+        />
+      </View>
+      //   </SafeAreaView>
     );
   }
 }

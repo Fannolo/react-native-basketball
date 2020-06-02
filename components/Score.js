@@ -18,8 +18,8 @@ class Score extends Component {
             {
               flex: 1,
               fontSize: 130,
-              fontWeight: '100',
-              color: '#707070',
+              fontWeight: '500',
+              color: 'rgba(0,0,0,0.1)',
             },
           ]}>
           {this.props.score}

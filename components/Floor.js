@@ -15,6 +15,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#F4F4F4',
     position: 'absolute',
     width: Dimensions.get('window').width,
+    paddingBottom: 100,
     bottom: 0,
   },
 });

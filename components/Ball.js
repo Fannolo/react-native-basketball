@@ -57,7 +57,7 @@ class Ball extends Component {
         ]}>
         <Image
           renderToHardwareTextureAndroid
-          source={require('../assets/ball-384.png')}
+          source={require('../assets/dogball.png')}
           style={[
             {
               width: this.props.radius * 2,
@@ -78,6 +78,7 @@ class Ball extends Component {
 
 const styles = StyleSheet.create({
   ballContainer: {
+    paddingBottom: 100,
     position: 'absolute',
     backgroundColor: 'transparent',
   },

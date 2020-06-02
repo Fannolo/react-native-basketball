@@ -21,6 +21,7 @@ class Hoop extends Component {
 
 const styles = StyleSheet.create({
   hoopContainer: {
+    backgroundColor: '#fff',
     position: 'absolute',
     // left: ,
     width: 200,
@@ -31,6 +32,7 @@ const styles = StyleSheet.create({
     borderRadius: 4,
   },
   hoopContained: {
+    backgroundColor: '#fff',
     width: 80,
     height: 54,
     marginTop: 38,
