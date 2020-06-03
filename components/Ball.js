@@ -57,7 +57,7 @@ class Ball extends Component {
         ]}>
         <Image
           renderToHardwareTextureAndroid
-          source={require('../assets/dogball.png')}
+          source={require('../assets/ballbasket.png')}
           style={[
             {
               width: this.props.radius * 2,

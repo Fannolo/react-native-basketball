@@ -56,7 +56,7 @@ class Basketball extends Component {
     super(props);
 
     this.backBoard = new Sound(
-      require('./assets/sounds/backboard.mp3'),
+      require('./assets/sounds/Synth-Speedbump-Fast-01.m4a'),
       (error) => {
         if (error) {
           console.log('failed to load the sound', error);
@@ -66,7 +66,7 @@ class Basketball extends Component {
     );
 
     this.swishSound = new Sound(
-      require('./assets/sounds/swoosh1.mp3'),
+      require('./assets/sounds/Synth-Whoosh-Big-01.m4a'),
       (error) => {
         if (error) {
           console.log('failed to load the sound', error);
@@ -76,7 +76,7 @@ class Basketball extends Component {
     );
 
     this.failure = new Sound(
-      require('./assets/sounds/failure1.mp3'),
+      require('./assets/sounds/Synth-Pop-Big-01.m4a'),
       (error) => {
         if (error) {
           console.log('failed to load the sound', error);
@@ -184,9 +184,9 @@ class Basketball extends Component {
     //Se l'altezza della palla è minore rispetto alla posizione in cui si trova il canestro allora sposta la palla a destra altrimenti a sinistra
 
     if (
-      (ball.x > NET_LEFT_BORDER_X + this.state.randomNetXPosition &&
-        ball.x < NET_RIGHT_BORDER_X + this.state.randomNetXPosition) ||
-      ball.y < NET_Y + this.state.randomNetYPosition + NET_HEIGHT / 2
+      (ball.x / 2 > NET_LEFT_BORDER_X + this.state.randomNetXPosition &&
+        ball.x / 2 < NET_RIGHT_BORDER_X + this.state.randomNetXPosition) ||
+      ball.y / 2 < NET_Y + this.state.randomNetYPosition + NET_HEIGHT / 2
     ) {
       nextState.vx = nextVelocity.x;
     } else {
@@ -274,7 +274,10 @@ class Basketball extends Component {
 
   updateVelocity(nextState) {
     nextState.vx = this.state.vx;
-    if (nextState.lifecycle === LC_STARTING && nextState.y < NET_Y - 120) {
+    if (
+      nextState.lifecycle === LC_STARTING &&
+      nextState.y < NET_Y + this.state.randomNetYPosition - 120
+    ) {
       nextState.vy = this.state.vy;
     } else {
       nextState.vy = this.state.vy + gravity;

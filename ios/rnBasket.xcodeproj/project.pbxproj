@@ -45,7 +45,7 @@
 		00E356F11AD99517003FC87E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		00E356F21AD99517003FC87E /* rnBasketTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = rnBasketTests.m; sourceTree = "<group>"; };
 		08187A104A4D7075F43BBACF /* Pods-rnBasket-rnBasketTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-rnBasket-rnBasketTests.release.xcconfig"; path = "Target Support Files/Pods-rnBasket-rnBasketTests/Pods-rnBasket-rnBasketTests.release.xcconfig"; sourceTree = "<group>"; };
-		13B07F961A680F5B00A75B9A /* rnBasket.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = rnBasket.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		13B07F961A680F5B00A75B9A /* Messy Dunk.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Messy Dunk.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = rnBasket/AppDelegate.h; sourceTree = "<group>"; };
 		13B07FB01A68108700A75B9A /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AppDelegate.m; path = rnBasket/AppDelegate.m; sourceTree = "<group>"; };
 		13B07FB21A68108700A75B9A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
@@ -174,7 +174,7 @@
 		83CBBA001A601CBA00E9B192 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				13B07F961A680F5B00A75B9A /* rnBasket.app */,
+				13B07F961A680F5B00A75B9A /* Messy Dunk.app */,
 				00E356EE1AD99517003FC87E /* rnBasketTests.xctest */,
 				2D02E47B1E0B4A5D006451C7 /* rnBasket-tvOS.app */,
 				2D02E4901E0B4A5D006451C7 /* rnBasket-tvOSTests.xctest */,
@@ -236,7 +236,7 @@
 			);
 			name = rnBasket;
 			productName = rnBasket;
-			productReference = 13B07F961A680F5B00A75B9A /* rnBasket.app */;
+			productReference = 13B07F961A680F5B00A75B9A /* Messy Dunk.app */;
 			productType = "com.apple.product-type.application";
 		};
 		2D02E47A1E0B4A5D006451C7 /* rnBasket-tvOS */ = {
@@ -291,7 +291,7 @@
 						TestTargetID = 13B07F861A680F5B00A75B9A;
 					};
 					13B07F861A680F5B00A75B9A = {
-						DevelopmentTeam = 3JWAQ92CB4;
+						DevelopmentTeam = 2A4JSXGWKQ;
 						LastSwiftMigration = 1120;
 					};
 					2D02E47A1E0B4A5D006451C7 = {
@@ -630,7 +630,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 3JWAQ92CB4;
+				DEVELOPMENT_TEAM = 2A4JSXGWKQ;
 				ENABLE_BITCODE = NO;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"$(inherited)",
@@ -643,8 +643,8 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
-				PRODUCT_NAME = rnBasket;
+				PRODUCT_BUNDLE_IDENTIFIER = com.variable.classicBasket;
+				PRODUCT_NAME = "Messy Dunk";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -658,7 +658,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 3JWAQ92CB4;
+				DEVELOPMENT_TEAM = 2A4JSXGWKQ;
 				INFOPLIST_FILE = rnBasket/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				OTHER_LDFLAGS = (
@@ -666,8 +666,8 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
-				PRODUCT_NAME = rnBasket;
+				PRODUCT_BUNDLE_IDENTIFIER = com.variable.classicBasket;
+				PRODUCT_NAME = "Messy Dunk";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
