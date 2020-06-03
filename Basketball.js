@@ -20,7 +20,7 @@ import Vector from './utils/Vector';
 const Sound = require('react-native-sound');
 
 // physical variables
-const gravity = 0.6; // gravity
+const gravity = 1; // gravity
 const radius = 50; // ball radius
 const rotationFactor = 10; // ball rotation factor
 
@@ -114,7 +114,7 @@ class Basketball extends Component {
   }
 
   componentDidMount() {
-    this.interval = setInterval(this.update.bind(this), 1000 / 60);
+    this.interval = setInterval(this.update.bind(this), 1000 / 120);
     console.disableYellowBox = true;
   }
 
@@ -156,7 +156,7 @@ class Basketball extends Component {
     normalVector = normalVector.normalise();
 
     const tangentVector = new Vector(
-      normalVector.getY() * 1,
+      normalVector.getY() * 2,
       normalVector.getX(),
     );
 
@@ -188,9 +188,9 @@ class Basketball extends Component {
         ball.x < NET_RIGHT_BORDER_X + this.state.randomNetXPosition) ||
       ball.y < NET_Y + this.state.randomNetYPosition + NET_HEIGHT / 2
     ) {
-      nextState.vx = nextVelocity.x * 2.5;
+      nextState.vx = nextVelocity.x;
     } else {
-      nextState.vx = -nextVelocity.x * 2.5;
+      nextState.vx = -nextVelocity.x;
     }
     // if (ball.y < NET_Y + this.state.randomNetYPosition + NET_HEIGHT / 2) {
     //   nextState.vx = nextVelocity.x + 10;
@@ -274,10 +274,7 @@ class Basketball extends Component {
 
   updateVelocity(nextState) {
     nextState.vx = this.state.vx;
-    if (
-      nextState.lifecycle === LC_STARTING &&
-      nextState.y < NET_Y + this.state.randomNetYPosition - 200
-    ) {
+    if (nextState.lifecycle === LC_STARTING && nextState.y < NET_Y - 120) {
       nextState.vy = this.state.vy;
     } else {
       nextState.vy = this.state.vy + gravity;
