@@ -1,64 +1,93 @@
 {
   "images" : [
     {
-      "filename" : "basketballicon-20@2x.png",
+      "filename" : "ICONAPP-20@2x.png",
       "idiom" : "iphone",
       "scale" : "2x",
       "size" : "20x20"
     },
     {
-      "filename" : "basketballicon-20@3x.png",
+      "filename" : "ICONAPP-20@3x.png",
       "idiom" : "iphone",
       "scale" : "3x",
       "size" : "20x20"
     },
     {
-      "filename" : "basketballicon-29.png",
+      "filename" : "ICONAPP-29.png",
       "idiom" : "iphone",
       "scale" : "1x",
       "size" : "29x29"
     },
     {
-      "filename" : "basketballicon-29@2x.png",
+      "filename" : "ICONAPP-29@2x.png",
       "idiom" : "iphone",
       "scale" : "2x",
       "size" : "29x29"
     },
     {
-      "filename" : "basketballicon-29@3x.png",
+      "filename" : "ICONAPP-29@3x.png",
       "idiom" : "iphone",
       "scale" : "3x",
       "size" : "29x29"
     },
     {
-      "filename" : "basketballicon-40@2x.png",
+      "filename" : "ICONAPP-40@2x.png",
       "idiom" : "iphone",
       "scale" : "2x",
       "size" : "40x40"
     },
     {
-      "filename" : "basketballicon-40@3x.png",
+      "filename" : "ICONAPP-40@3x.png",
       "idiom" : "iphone",
       "scale" : "3x",
       "size" : "40x40"
     },
     {
-      "filename" : "basketballicon-60@2x.png",
+      "filename" : "ICONAPP-60@2x.png",
       "idiom" : "iphone",
       "scale" : "2x",
       "size" : "60x60"
     },
     {
-      "filename" : "basketballicon-60@3x.png",
+      "filename" : "ICONAPP-60@3x.png",
       "idiom" : "iphone",
       "scale" : "3x",
       "size" : "60x60"
     },
     {
-      "filename" : "basketballicon-1025.png",
+      "filename" : "ICONAPP-1025.png",
       "idiom" : "ios-marketing",
       "scale" : "1x",
       "size" : "1024x1024"
+    },
+    {
+      "filename" : "ICONAPP-83.5@2x.png",
+      "idiom" : "universal",
+      "scale" : "2x"
+    },
+    {
+      "filename" : "ICONAPP-20.png",
+      "idiom" : "universal",
+      "scale" : "1x",
+      "size" : "20x20"
+    },
+    {
+      "filename" : "ICONAPP-40.png",
+      "idiom" : "universal",
+      "scale" : "1x",
+      "size" : "40x40"
+    },
+    {
+      "filename" : "ICONAPP-76@2x.png",
+      "idiom" : "universal",
+      "scale" : "1x",
+      "size" : "40x40"
+    },
+    {
+      "filename" : "ICONAPP-76.png",
+      "idiom" : "universal",
+      "scale" : "1x",
+      "size" : "76x76"
     }
   ],
   "info" : {

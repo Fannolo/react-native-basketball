@@ -5,6 +5,8 @@ import {
   Dimensions,
   SafeAreaView,
   AsyncStorage,
+  StatusBar,
+  Platform,
 } from 'react-native';
 
 import Ball from './components/Ball';
@@ -20,22 +22,22 @@ import Vector from './utils/Vector';
 const Sound = require('react-native-sound');
 
 // physical variables
-const gravity = 1; // gravity
-const radius = 50; // ball radius
+const gravity = 0.6; // gravity
+const radius = 48; // ball radius
 const rotationFactor = 10; // ball rotation factor
 
 // components sizes and positions
 const FLOOR_HEIGHT = 60;
 const FLOOR_Y = 11;
 const HOOP_Y = Dimensions.get('window').height - 227;
-const NET_HEIGHT = 6;
-const NET_WIDTH = 83;
+const NET_HEIGHT = 10;
+const NET_WIDTH = 100;
 const NET_Y = Dimensions.get('window').height - 216;
 const NET_X = Dimensions.get('window').width / 2 - NET_WIDTH / 2;
 const EMOJI_X = Dimensions.get('window').width / 2 - 50;
 const NET_LEFT_BORDER_X = NET_X + NET_HEIGHT / 2;
 const NET_LEFT_BORDER_Y = NET_Y;
-const NET_RIGHT_BORDER_X = NET_X + NET_WIDTH + NET_HEIGHT / 2;
+const NET_RIGHT_BORDER_X = NET_X + NET_WIDTH - NET_HEIGHT / 2;
 const NET_RIGHT_BORDER_Y = NET_LEFT_BORDER_Y;
 
 // ball lifecycle
@@ -156,7 +158,7 @@ class Basketball extends Component {
     normalVector = normalVector.normalise();
 
     const tangentVector = new Vector(
-      normalVector.getY() * 2,
+      normalVector.getY() * -1,
       normalVector.getX(),
     );
 
@@ -184,18 +186,19 @@ class Basketball extends Component {
     //Se l'altezza della palla è minore rispetto alla posizione in cui si trova il canestro allora sposta la palla a destra altrimenti a sinistra
 
     if (
-      (ball.x / 2 > NET_LEFT_BORDER_X + this.state.randomNetXPosition &&
-        ball.x / 2 < NET_RIGHT_BORDER_X + this.state.randomNetXPosition) ||
-      ball.y / 2 < NET_Y + this.state.randomNetYPosition + NET_HEIGHT / 2
+      // (ball.x / 2 > NET_LEFT_BORDER_X + this.state.randomNetXPosition &&
+      //   ball.x / 2 < NET_RIGHT_BORDER_X + this.state.randomNetXPosition) ||
+      ball.y <
+      NET_Y + this.state.randomNetYPosition + NET_HEIGHT / 2
     ) {
       nextState.vx = nextVelocity.x;
     } else {
       nextState.vx = -nextVelocity.x;
     }
-    // if (ball.y < NET_Y + this.state.randomNetYPosition + NET_HEIGHT / 2) {
-    //   nextState.vx = nextVelocity.x + 10;
+    // if (ball.y < NET_Y + NET_HEIGHT / 2) {
+    //   nextState.vx = nextVelocity.x;
     // } else {
-    //   nextState.vx = -nextVelocity.x - 10;
+    //   nextState.vx = -nextVelocity.x;
     // }
 
     nextState.vy = nextVelocity.y;
@@ -224,7 +227,7 @@ class Basketball extends Component {
           return _self.state.vy;
         },
       },
-      mass: 5,
+      mass: 2,
     };
     const netLeftBorder = {
       x: NET_LEFT_BORDER_X + this.state.randomNetXPosition,
@@ -258,14 +261,14 @@ class Basketball extends Component {
     const isLeftCollision = this.circlesColliding(ball, netLeftBorder);
     if (isLeftCollision) {
       this.backBoard.play();
-      ReactNativeHapticFeedback.trigger('impactLight', FeedBackOptions);
+      ReactNativeHapticFeedback.trigger('impactMedium', FeedBackOptions);
       nextState.lifecycle = LC_BOUNCING;
       this.updateCollisionVelocity(nextState, ball, netLeftBorder);
     } else {
       const isRightCollision = this.circlesColliding(ball, netRightBorder);
       if (isRightCollision) {
         this.backBoard.play();
-        ReactNativeHapticFeedback.trigger('impactLight', FeedBackOptions);
+        ReactNativeHapticFeedback.trigger('impactMedium', FeedBackOptions);
         nextState.lifecycle = LC_BOUNCING;
         this.updateCollisionVelocity(nextState, ball, netRightBorder);
       }
@@ -274,10 +277,7 @@ class Basketball extends Component {
 
   updateVelocity(nextState) {
     nextState.vx = this.state.vx;
-    if (
-      nextState.lifecycle === LC_STARTING &&
-      nextState.y < NET_Y + this.state.randomNetYPosition - 120
-    ) {
+    if (nextState.lifecycle === LC_STARTING && nextState.y < NET_Y - 200) {
       nextState.vy = this.state.vy;
     } else {
       nextState.vy = this.state.vy + gravity;
@@ -297,9 +297,9 @@ class Basketball extends Component {
 
     if (this.state.scored === null) {
       if (
-        this.state.y + radius >
+        this.state.y + radius >=
           NET_Y + NET_HEIGHT / 2 + this.state.randomNetYPosition &&
-        nextState.y + radius <
+        nextState.y + radius <=
           NET_Y + NET_HEIGHT / 2 + this.state.randomNetYPosition
       ) {
         if (
@@ -309,7 +309,7 @@ class Basketball extends Component {
             NET_RIGHT_BORDER_X + this.state.randomNetXPosition
         ) {
           this.swishSound.play();
-          ReactNativeHapticFeedback.trigger('impactMedium', FeedBackOptions);
+          ReactNativeHapticFeedback.trigger('impactHeavy', FeedBackOptions);
           nextState.scored = true;
           nextState.score += 1;
         } else {
@@ -383,9 +383,13 @@ class Basketball extends Component {
           4,
           Dimensions.get('window').width - radius * 2 - 4,
         );
-        nextState.randomNetXPosition = this.getRandomInt(-100, 100);
-        nextState.randomNetYPosition = this.getRandomInt(-150, 20);
+        if (this.state.score >= 10) {
+          nextState.randomNetXPosition = this.getRandomInt(-100, 100);
+          nextState.randomNetYPosition = this.getRandomInt(-150, 20);
+        }
       } else {
+        nextState.randomNetXPosition = 0;
+        nextState.randomNetYPosition = 0;
         this.setState({ciao: true});
         this.failure.play();
         // nextState.x = Dimensions.get('window').width / 2 - radius;
@@ -407,20 +411,8 @@ class Basketball extends Component {
 
   async updateHighScore(nextState) {
     if (nextState.scored === false) {
-      //   let totalLosing = await AsyncStorage.getItem('highScoreLosing');
-      //   if (totalLosing !== undefined) {
-      //     totalLosing = parseInt(totalLosing);
-      //     if (totalLosing === 2) {
-      //       this.failedAfter20Times.play();
-      //     }
-      //     totalLosing += 1;
-      //     await AsyncStorage.setItem('highScoreLosing', String(0));
-      //   } else {
-      //     await AsyncStorage.setItem('highScoreLosing', String(0));
-      //   }
-
       let highScore = await AsyncStorage.getItem('highScore');
-      if (JSON.stringify(this.state.score) > highScore || !highScore) {
+      if (this.state.score > parseInt(highScore) || !highScore) {
         await AsyncStorage.setItem(
           'highScore',
           JSON.stringify(this.state.score),
@@ -476,42 +468,45 @@ class Basketball extends Component {
 
   render() {
     return (
-      <View style={{backgroundColor: '#F4F4F4', flex: 1}}>
-        <SafeAreaView style={styles.container} forceInset={{bottom: 0}}>
-          <View style={styles.container}>
-            <Score
-              y={FLOOR_HEIGHT * 6}
-              score={this.state.score}
-              scored={this.state.scored}
-            />
-            <Hoop
-              y={HOOP_Y + this.state.randomNetYPosition}
-              x={
-                Dimensions.get('window').width / 2 -
-                200 / 2 +
-                this.state.randomNetXPosition
-              }
-            />
-            {this.renderNet(this.state.lifecycle === LC_STARTING)}
-            {this.renderFloor(this.state.vy <= 0)}
-            <Ball
-              onStart={this.onStart.bind(this)}
-              x={this.state.x}
-              y={this.state.y}
-              radius={radius}
-              rotate={this.state.rotate}
-              scale={this.state.scale}
-            />
-            {this.renderNet(this.state.lifecycle !== LC_STARTING)}
-            {this.renderFloor(this.state.vy > 0)}
-            <Emoji
-              y={NET_Y + this.state.randomNetYPosition}
-              x={EMOJI_X + this.state.randomNetXPosition}
-              scored={this.state.scored}
-            />
-          </View>
-        </SafeAreaView>
-      </View>
+      <>
+        {Platform.OS === 'ios' && <StatusBar barStyle={'dark-content'} />}
+        <View style={{backgroundColor: '#F4F4F4', flex: 1}}>
+          <SafeAreaView style={styles.container} forceInset={{bottom: 0}}>
+            <View style={styles.container}>
+              <Score
+                y={FLOOR_HEIGHT * 6}
+                score={this.state.score}
+                scored={this.state.scored}
+              />
+              <Hoop
+                y={HOOP_Y + this.state.randomNetYPosition}
+                x={
+                  Dimensions.get('window').width / 2 -
+                  200 / 2 +
+                  this.state.randomNetXPosition
+                }
+              />
+              {this.renderNet(this.state.lifecycle === LC_STARTING)}
+              {this.renderFloor(this.state.vy <= 0)}
+              <Ball
+                onStart={this.onStart.bind(this)}
+                x={this.state.x}
+                y={this.state.y}
+                radius={radius}
+                rotate={this.state.rotate}
+                scale={this.state.scale}
+              />
+              {this.renderNet(this.state.lifecycle !== LC_STARTING)}
+              {this.renderFloor(this.state.vy > 0)}
+              <Emoji
+                y={NET_Y + this.state.randomNetYPosition}
+                x={EMOJI_X + this.state.randomNetXPosition}
+                scored={this.state.scored}
+              />
+            </View>
+          </SafeAreaView>
+        </View>
+      </>
     );
   }
 }
