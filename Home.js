@@ -102,7 +102,7 @@ const HomeScreen = ({navigation}) => {
             onPress={() => {
               ReactNativeHapticFeedback.trigger('impactHeavy', FeedBackOptions);
               swishSound.play();
-              navigation.navigate('Game');
+              navigation.navigate('Game', {highScore: state.highScore});
             }}>
             <Image
               source={require('./assets/ballbasket.png')}

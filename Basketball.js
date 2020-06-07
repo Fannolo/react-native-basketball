@@ -19,6 +19,10 @@ import Score from './components/Score';
 import ReactNativeHapticFeedback from 'react-native-haptic-feedback';
 
 import Vector from './utils/Vector';
+import Continue from './components/Continue';
+import {BlurView} from '@react-native-community/blur';
+import {useNavigation, useRoute} from '@react-navigation/native';
+
 const Sound = require('react-native-sound');
 
 // physical variables
@@ -112,6 +116,8 @@ class Basketball extends Component {
       score: 0,
       randomNetYPosition: 0,
       randomNetXPosition: 0,
+      dead: false,
+      streak: 0,
     };
   }
 
@@ -260,6 +266,8 @@ class Basketball extends Component {
 
     const isLeftCollision = this.circlesColliding(ball, netLeftBorder);
     if (isLeftCollision) {
+      nextState.colliding = true;
+      //this.setState({colliding: true});
       this.backBoard.play();
       ReactNativeHapticFeedback.trigger('impactMedium', FeedBackOptions);
       nextState.lifecycle = LC_BOUNCING;
@@ -267,6 +275,8 @@ class Basketball extends Component {
     } else {
       const isRightCollision = this.circlesColliding(ball, netRightBorder);
       if (isRightCollision) {
+        nextState.colliding = true;
+        //this.setState({colliding: true});
         this.backBoard.play();
         ReactNativeHapticFeedback.trigger('impactMedium', FeedBackOptions);
         nextState.lifecycle = LC_BOUNCING;
@@ -311,9 +321,22 @@ class Basketball extends Component {
           this.swishSound.play();
           ReactNativeHapticFeedback.trigger('impactHeavy', FeedBackOptions);
           nextState.scored = true;
-          nextState.score += 1;
+          if (!nextState.colliding) {
+            nextState.streak += 1;
+            nextState.score += 1 * nextState.streak;
+            //this.setState({colliding: false});
+            nextState.colliding = false;
+          } else {
+            nextState.score += 1;
+            nextState.streak = 0;
+            //this.setState({colliding: false});
+            nextState.colliding = false;
+          }
         } else {
+          nextState.streak = 0;
           nextState.scored = false;
+          //this.setState({colliding: false});
+          nextState.colliding = false;
         }
       }
     }
@@ -388,18 +411,13 @@ class Basketball extends Component {
           nextState.randomNetYPosition = this.getRandomInt(-150, 20);
         }
       } else {
-        nextState.randomNetXPosition = 0;
-        nextState.randomNetYPosition = 0;
-        this.setState({ciao: true});
+        nextState.dead = true;
         this.failure.play();
-        // nextState.x = Dimensions.get('window').width / 2 - radius;
-        nextState.x = this.randomIntFromInterval(
-          4,
-          Dimensions.get('window').width - radius * 2 - 4,
-        );
-        nextState.score = 0;
+        // nextState.randomNetXPosition = 0;
+        // nextState.randomNetYPosition = 0;
+        nextState.x = Dimensions.get('window').width / 2 - radius;
+        // nextState.score = 0;
       }
-      this.setState({ciao: false});
       // nextState.x = Dimensions.get('window').width / 2 - radius;
       nextState.vy = -8;
       nextState.vx = 0;
@@ -474,9 +492,10 @@ class Basketball extends Component {
           <SafeAreaView style={styles.container} forceInset={{bottom: 0}}>
             <View style={styles.container}>
               <Score
-                y={FLOOR_HEIGHT * 6}
+                y={FLOOR_HEIGHT * 4}
                 score={this.state.score}
                 scored={this.state.scored}
+                streak={this.state.streak}
               />
               <Hoop
                 y={HOOP_Y + this.state.randomNetYPosition}
@@ -506,15 +525,70 @@ class Basketball extends Component {
             </View>
           </SafeAreaView>
         </View>
+        {this.state.dead ? (
+          <View style={styles.overlayContainer}>
+            <BlurView
+              style={styles.overlay}
+              blurType="dark"
+              blurAmount={32}
+              reducedTransparencyFallbackColor="rgba(0,0,0,0.6)"
+            />
+            <Continue
+              highScore={this.props.route.params?.highScore}
+              score={this.state.score}
+              onPressDeny={() => {
+                this.setState({
+                  dead: false,
+                  randomNetXPosition: 0,
+                  randomNetYPosition: 0,
+                  x: Dimensions.get('window').width / 2 - radius,
+                  score: 0,
+                });
+              }}
+              onPressSuccess={() => {
+                this.setState({
+                  dead: false,
+                  x: Dimensions.get('window').width / 2 - radius,
+                });
+              }}
+            />
+          </View>
+        ) : null}
       </>
     );
   }
 }
 
 const styles = StyleSheet.create({
+  overlayContainer: {
+    flex: 1,
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    bottom: 0,
+    right: 0,
+    zIndex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    alignContent: 'center',
+  },
+  overlay: {
+    flex: 1,
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    bottom: 0,
+    right: 0,
+    zIndex: 1,
+  },
   container: {
     flex: 1,
   },
 });
 
-export default Basketball;
+export default function (props) {
+  const navigation = useNavigation();
+  const route = useRoute();
+
+  return <Basketball {...props} navigation={navigation} route={route} />;
+}

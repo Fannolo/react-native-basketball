@@ -5,26 +5,50 @@ import {PropTypes} from 'prop-types';
 class Score extends Component {
   render() {
     return (
-      <View
-        style={[
-          styles.scoreContainer,
-          {
-            bottom: this.props.y,
-            width: Dimensions.get('window').width,
-          },
-        ]}>
-        <Text
+      <>
+        <View
           style={[
+            styles.scoreContainer,
             {
-              flex: 1,
-              fontSize: 130,
-              fontWeight: '500',
-              color: 'rgba(0,0,0,0.1)',
+              bottom: this.props.y,
+              width: Dimensions.get('window').width,
             },
           ]}>
-          {this.props.score}
-        </Text>
-      </View>
+          <Text
+            style={[
+              {
+                flex: 1,
+                fontSize: 130,
+                fontWeight: '500',
+                color: 'rgba(0,0,0,0.1)',
+              },
+            ]}>
+            {this.props.score}
+          </Text>
+        </View>
+        <View
+          style={[
+            styles.scoreContainer,
+            {
+              bottom: this.props.y - 40,
+              width: Dimensions.get('window').width,
+            },
+          ]}>
+          {this.props.streak > 1 ? (
+            <Text
+              style={[
+                {
+                  flex: 1,
+                  fontSize: 50,
+                  fontWeight: '500',
+                  color: 'rgba(0,0,0,0.1)',
+                },
+              ]}>
+              {`X${this.props.streak}`}
+            </Text>
+          ) : null}
+        </View>
+      </>
     );
   }
 }
