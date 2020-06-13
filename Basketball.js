@@ -7,6 +7,7 @@ import {
   AsyncStorage,
   StatusBar,
   Platform,
+  BackHandler,
 } from 'react-native';
 
 import Ball from './components/Ball';
@@ -22,6 +23,14 @@ import Vector from './utils/Vector';
 import Continue from './components/Continue';
 import {BlurView} from '@react-native-community/blur';
 import {useNavigation, useRoute, CommonActions} from '@react-navigation/native';
+import {
+  BannerAd,
+  BannerAdSize,
+  TestIds,
+  RewardedAd,
+  RewardedAdEventType,
+} from '@react-native-firebase/admob';
+import {AdMob} from './configs';
 
 const Sound = require('react-native-sound');
 
@@ -56,6 +65,12 @@ const FeedBackOptions = {
   enableVibrateFallback: true,
   ignoreAndroidSystemSettings: false,
 };
+const adUnit = __DEV__ ? TestIds.REWARDED : AdMob.IOS.GAMEPLAY_REWARD_ID;
+const rewarded = RewardedAd.createForAdRequest(adUnit, {
+  //TODO: Pass the request non personlized ads only
+  requestNonPersonalizedAdsOnly: true,
+  keywords: ['game'],
+});
 
 class Basketball extends Component {
   constructor(props) {
@@ -117,12 +132,30 @@ class Basketball extends Component {
       randomNetYPosition: 0,
       randomNetXPosition: 0,
       dead: false,
+      adLoaded: false,
+      ad_played: false,
       streak: 0,
     };
   }
 
   componentDidMount() {
+    this.backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      () => true,
+    );
     this.interval = setInterval(this.update.bind(this), 1000 / 120);
+    this.eventListener = rewarded.onAdEvent((type, error, reward) => {
+      if (type === RewardedAdEventType.LOADED) {
+        this.setState({adLoaded: true});
+      }
+
+      if (type === RewardedAdEventType.EARNED_REWARD) {
+        console.log('User earned reward of ', reward);
+      }
+    });
+
+    // Start loading the rewarded ad straight away
+    rewarded.load();
     console.disableYellowBox = true;
   }
 
@@ -130,6 +163,7 @@ class Basketball extends Component {
     if (this.interval) {
       clearInterval(this.interval);
     }
+    //  if (this.eventListener) this.eventListener.remove();
   }
 
   onStart(angle) {
@@ -415,20 +449,15 @@ class Basketball extends Component {
       } else {
         this.failure.play();
         nextState.x = Dimensions.get('window').width / 2 - radius;
-        // if (
-        //   nextState.score > this.props.route.params?.highScore ||
-        //   nextState.score >= this.props.route.params?.highScore * 0.3
-        // ) {
-        setTimeout(
-          () => this.props.navigation.dispatch(CommonActions.goBack()),
-          1000,
-        );
-        nextState.dead = true;
-        // } else {
-        nextState.randomNetXPosition = 0;
-        nextState.randomNetYPosition = 0;
-        nextState.score = 0;
-        //}
+        if (nextState.ad_played) {
+          this.props.navigation.dispatch(CommonActions.goBack());
+          //nextState.dead = true;
+        } else {
+          nextState.dead = true;
+          nextState.randomNetXPosition = 0;
+          nextState.randomNetYPosition = 0;
+          //nextState.score = 0;
+        }
       }
       // nextState.x = Dimensions.get('window').width / 2 - radius;
       nextState.vy = -8;
@@ -499,7 +528,9 @@ class Basketball extends Component {
   render() {
     return (
       <>
-        {Platform.OS === 'ios' && <StatusBar barStyle={'light-content'} />}
+        {Platform.OS === 'ios' && (
+          <StatusBar hidden barStyle={'light-content'} />
+        )}
         <View
           style={{
             //backgroundColor: '#F4F4F4',
@@ -541,6 +572,12 @@ class Basketball extends Component {
               />
             </View>
           </SafeAreaView>
+          <View>
+            <BannerAd
+              size={BannerAdSize.SMART_BANNER}
+              unitId={__DEV__ ? TestIds.BANNER : AdMob.IOS.GAMEPLAY_BANNER_ID}
+            />
+          </View>
         </View>
         {this.state.dead ? (
           <View style={styles.overlayContainer}>
@@ -550,12 +587,14 @@ class Basketball extends Component {
               blurAmount={32}
               reducedTransparencyFallbackColor="rgba(0,0,0,0.6)"
             />
-            {/* <Continue
+            <Continue
               highScore={this.props.route.params?.highScore}
               score={this.state.score}
               onPressDeny={() => {
+                this.props.navigation.dispatch(CommonActions.goBack());
                 this.setState({
                   dead: false,
+                  ad_played: false,
                   randomNetXPosition: 0,
                   randomNetYPosition: 0,
                   x: Dimensions.get('window').width / 2 - radius,
@@ -563,12 +602,14 @@ class Basketball extends Component {
                 });
               }}
               onPressSuccess={() => {
+                rewarded.show();
                 this.setState({
                   dead: false,
+                  ad_played: true,
                   x: Dimensions.get('window').width / 2 - radius,
                 });
               }}
-            /> */}
+            />
           </View>
         ) : null}
       </>
@@ -577,6 +618,14 @@ class Basketball extends Component {
 }
 
 const styles = StyleSheet.create({
+  interstitialAdContainer: {
+    width: 200,
+    zIndex: 2,
+    flex: 1,
+    height: 200,
+    borderRadius: 50,
+    backgroundColor: 'rgba(0,0,0,0.1)',
+  },
   overlayContainer: {
     flex: 1,
     position: 'absolute',

@@ -19,54 +19,55 @@ import admob, {
   AdsConsent,
   AdsConsentStatus,
 } from '@react-native-firebase/admob';
+import {AdMob} from './configs';
 
 const Stack = createStackNavigator();
 
 const App = () => {
-  useEffect(async () => {
+  useEffect(() => {
     SplashScreen.hide();
-    const consentInfo = await requestConsentInfo();
-    console.log('pippo', consentInfo);
-    if (
-      consentInfo.isRequestLocationInEeaOrUnknown &&
-      consentInfo.status === AdsConsentStatus.UNKNOWN
-    ) {
-      const formResult = await AdsConsent.showForm({
-        //TODO: add a privacy policy page
-        privacyPolicy: 'https://invertase.io/privacy-policy',
-        withPersonalizedAds: true,
-        withNonPersonalizedAds: true,
-        withAdFree: true,
-      });
-    }
+    const adMobConfig = () => {
+      admob()
+        .setRequestConfiguration({
+          // Update all future requests suitable for parental guidance
+          maxAdContentRating: MaxAdContentRating.PG,
+          // Indicates that you want your content treated as child-directed for purposes of COPPA.
+          tagForChildDirectedTreatment: false,
+          // Indicates that you want the ad request to be handled in a
+          // manner suitable for users under the age of consent.
+          tagForUnderAgeOfConsent: false,
+        })
+        .then(() => {
+          console.log('configuration admob successfull');
+        });
+    };
+
+    const requestConsentInfo = async () => {
+      return await AdsConsent.requestInfoUpdate([AdMob.PUBLISHER_ID]);
+    };
+
+    const showFormForAccept = async () => {
+      const consentInfo = await requestConsentInfo();
+      consentInfo.status;
+      if (
+        consentInfo.isRequestLocationInEeaOrUnknown &&
+        consentInfo.status === AdsConsentStatus.UNKNOWN
+      ) {
+        await AdsConsent.showForm({
+          //TODO: add a privacy policy page
+          privacyPolicy: 'https://invertase.io/privacy-policy',
+          withPersonalizedAds: true,
+          withNonPersonalizedAds: true,
+        });
+      }
+    };
+    showFormForAccept();
+    adMobConfig();
   }, []);
 
-  const requestConsentInfo = async () => {
-    try {
-      return await AdsConsent.requestInfoUpdate(['pub-3162603114593392']);
-    } catch (e) {
-      console.error(e);
-    }
-  };
-
-  // admob()
-  //   .setRequestConfiguration({
-  //     // Update all future requests suitable for parental guidance
-  //     maxAdContentRating: MaxAdContentRating.PG,
-
-  //     // Indicates that you want your content treated as child-directed for purposes of COPPA.
-  //     tagForChildDirectedTreatment: false,
-
-  //     // Indicates that you want the ad request to be handled in a
-  //     // manner suitable for users under the age of consent.
-  //     tagForUnderAgeOfConsent: false,
-  //   })
-  //   .then(() => {
-  //     // Request config successfully set!
-  //   });
   return (
     <NavigationContainer>
-      <StatusBar barStyle="dark-content" />
+      <StatusBar hidden barStyle="dark-content" />
       <Stack.Navigator
         screenOptions={{
           headerShown: false,

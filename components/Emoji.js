@@ -17,7 +17,7 @@ class Emoji extends Component {
     };
   }
 
-  componentWillReceiveProps(nextProps) {
+  componentDidUpdate(nextProps) {
     if (nextProps.scored !== null && this.props.scored === null) {
       if (nextProps.scored === true) {
         this.setState({

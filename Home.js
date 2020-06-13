@@ -15,13 +15,8 @@ import {BlurView} from '@react-native-community/blur';
 import Sound from 'react-native-sound';
 import ReactNativeHapticFeedback from 'react-native-haptic-feedback';
 import {useIsFocused} from '@react-navigation/native';
-import {
-  InterstitialAd,
-  BannerAdSize,
-  RewardedAd,
-  BannerAd,
-  TestIds,
-} from '@react-native-firebase/admob';
+import {BannerAdSize, BannerAd, TestIds} from '@react-native-firebase/admob';
+import {AdMob} from './configs';
 
 const HomeScreen = ({navigation}) => {
   const [state, setState] = useState({
@@ -58,8 +53,6 @@ const HomeScreen = ({navigation}) => {
     }
   };
 
-  console.log('pippo banner size', BannerAdSize);
-
   const isFocused = useIsFocused();
   return (
     <>
@@ -85,7 +78,7 @@ const HomeScreen = ({navigation}) => {
           <View style={[styles.bannerAdContainer]}>
             <BannerAd
               size={BannerAdSize.MEDIUM_RECTANGLE}
-              unitId={TestIds.BANNER}
+              unitId={__DEV__ ? TestIds.BANNER : AdMob.IOS.HOME_BANNER_ID}
             />
           </View>
           <View style={[styles.topContainer]}>
