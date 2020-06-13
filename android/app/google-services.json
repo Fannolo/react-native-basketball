@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "26181073899",
+    "firebase_url": "https://messy-dunk.firebaseio.com",
+    "project_id": "messy-dunk",
+    "storage_bucket": "messy-dunk.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:26181073899:android:cdab78e9af3e310a4bb7ae",
+        "android_client_info": {
+          "package_name": "com.rnbasket"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "26181073899-3suqoa31uld679ngnl0jib59f46gbpht.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.rnbasket",
+            "certificate_hash": "189f9bdcc749bd4e88695d5ee8910608b5da6dfa"
+          }
+        },
+        {
+          "client_id": "26181073899-6ir2mh73vnrl79jgpif269rt433q3ap1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCogGVKTzBdtdGm0_Hl8q2pPzWWMSLlSUQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "26181073899-6ir2mh73vnrl79jgpif269rt433q3ap1.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -21,23 +21,27 @@ class Hoop extends Component {
 
 const styles = StyleSheet.create({
   hoopContainer: {
-    backgroundColor: '#F4F4F4',
+    //backgroundColor: '#F4F4F4',
+    backgroundColor: '#000',
     position: 'absolute',
     // left: ,
     width: 200,
     height: 112,
     alignItems: 'center',
     borderWidth: 5,
-    borderColor: '#b7b7b7',
+    //borderColor: '#b7b7b7',
+    borderColor: '#fff',
     borderRadius: 4,
   },
   hoopContained: {
-    backgroundColor: '#F4F4F4',
+    //backgroundColor: '#F4F4F4',
+    backgroundColor: '#000',
     width: 80,
     height: 54,
     marginTop: 38,
     borderWidth: 5,
-    borderColor: '#b7b7b7',
+    //borderColor: '#b7b7b7',
+    borderColor: '#fff',
   },
 });
 

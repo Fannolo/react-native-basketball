@@ -20,7 +20,8 @@ class Score extends Component {
                 flex: 1,
                 fontSize: 130,
                 fontWeight: '500',
-                color: 'rgba(0,0,0,0.1)',
+                color: 'rgba(255,255,255,0.3)',
+                zIndex: 2,
               },
             ]}>
             {this.props.score}
@@ -41,7 +42,9 @@ class Score extends Component {
                   flex: 1,
                   fontSize: 50,
                   fontWeight: '500',
-                  color: 'rgba(0,0,0,0.1)',
+                  //color: 'rgba(0,0,0,0.1)',
+                  color: 'rgba(255,255,255,0.3)',
+                  zIndex: 2,
                 },
               ]}>
               {`X${this.props.streak}`}

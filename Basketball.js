@@ -21,7 +21,7 @@ import ReactNativeHapticFeedback from 'react-native-haptic-feedback';
 import Vector from './utils/Vector';
 import Continue from './components/Continue';
 import {BlurView} from '@react-native-community/blur';
-import {useNavigation, useRoute} from '@react-navigation/native';
+import {useNavigation, useRoute, CommonActions} from '@react-navigation/native';
 
 const Sound = require('react-native-sound');
 
@@ -406,17 +406,29 @@ class Basketball extends Component {
           4,
           Dimensions.get('window').width - radius * 2 - 4,
         );
+        //nextState.x = Dimensions.get('window').width / 2 - radius;
+
         if (this.state.score >= 10) {
           nextState.randomNetXPosition = this.getRandomInt(-100, 100);
           nextState.randomNetYPosition = this.getRandomInt(-150, 20);
         }
       } else {
-        nextState.dead = true;
         this.failure.play();
-        // nextState.randomNetXPosition = 0;
-        // nextState.randomNetYPosition = 0;
         nextState.x = Dimensions.get('window').width / 2 - radius;
-        // nextState.score = 0;
+        // if (
+        //   nextState.score > this.props.route.params?.highScore ||
+        //   nextState.score >= this.props.route.params?.highScore * 0.3
+        // ) {
+        setTimeout(
+          () => this.props.navigation.dispatch(CommonActions.goBack()),
+          1000,
+        );
+        nextState.dead = true;
+        // } else {
+        nextState.randomNetXPosition = 0;
+        nextState.randomNetYPosition = 0;
+        nextState.score = 0;
+        //}
       }
       // nextState.x = Dimensions.get('window').width / 2 - radius;
       nextState.vy = -8;
@@ -487,8 +499,13 @@ class Basketball extends Component {
   render() {
     return (
       <>
-        {Platform.OS === 'ios' && <StatusBar barStyle={'dark-content'} />}
-        <View style={{backgroundColor: '#F4F4F4', flex: 1}}>
+        {Platform.OS === 'ios' && <StatusBar barStyle={'light-content'} />}
+        <View
+          style={{
+            //backgroundColor: '#F4F4F4',
+            backgroundColor: '#000',
+            flex: 1,
+          }}>
           <SafeAreaView style={styles.container} forceInset={{bottom: 0}}>
             <View style={styles.container}>
               <Score
@@ -533,7 +550,7 @@ class Basketball extends Component {
               blurAmount={32}
               reducedTransparencyFallbackColor="rgba(0,0,0,0.6)"
             />
-            <Continue
+            {/* <Continue
               highScore={this.props.route.params?.highScore}
               score={this.state.score}
               onPressDeny={() => {
@@ -551,7 +568,7 @@ class Basketball extends Component {
                   x: Dimensions.get('window').width / 2 - radius,
                 });
               }}
-            />
+            /> */}
           </View>
         ) : null}
       </>

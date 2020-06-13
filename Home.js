@@ -15,6 +15,13 @@ import {BlurView} from '@react-native-community/blur';
 import Sound from 'react-native-sound';
 import ReactNativeHapticFeedback from 'react-native-haptic-feedback';
 import {useIsFocused} from '@react-navigation/native';
+import {
+  InterstitialAd,
+  BannerAdSize,
+  RewardedAd,
+  BannerAd,
+  TestIds,
+} from '@react-native-firebase/admob';
 
 const HomeScreen = ({navigation}) => {
   const [state, setState] = useState({
@@ -51,6 +58,8 @@ const HomeScreen = ({navigation}) => {
     }
   };
 
+  console.log('pippo banner size', BannerAdSize);
+
   const isFocused = useIsFocused();
   return (
     <>
@@ -60,8 +69,8 @@ const HomeScreen = ({navigation}) => {
         <BlurView
           style={styles.videoContainer}
           blurType="dark"
-          blurAmount={10}
-          reducedTransparencyFallbackColor="white"
+          blurAmount={32}
+          reducedTransparencyFallbackColor="rgba(0,0,0,0.5)"
         />
         <Video
           source={require('./assets/video/backgroundvideo.mov')}
@@ -72,21 +81,27 @@ const HomeScreen = ({navigation}) => {
           rate={1.0}
           ignoreSilentSwitch={'obey'}
         />
-
-        <View style={[styles.topContainer]}>
-          {!!state.highScore && isFocused && (
-            <Text
-              style={{
-                color: '#f2f2f2',
-                fontWeight: '600',
-                fontSize: 40,
-                textAlign: 'center',
-              }}>
-              {`BEST: ${state.highScore}`}
-            </Text>
-          )}
+        <View style={styles.containerOfAll}>
+          <View style={[styles.bannerAdContainer]}>
+            <BannerAd
+              size={BannerAdSize.MEDIUM_RECTANGLE}
+              unitId={TestIds.BANNER}
+            />
+          </View>
+          <View style={[styles.topContainer]}>
+            {!!state.highScore && isFocused && (
+              <Text
+                style={{
+                  color: '#f2f2f2',
+                  fontWeight: '600',
+                  fontSize: 40,
+                  textAlign: 'center',
+                }}>
+                {`BEST: ${state.highScore}`}
+              </Text>
+            )}
+          </View>
         </View>
-
         <View style={styles.bottomContainer}>
           <View style={styles.stripeContainer}>
             <View style={[styles.stripes, {backgroundColor: '#4DB03D'}]} />
@@ -96,7 +111,6 @@ const HomeScreen = ({navigation}) => {
             <View style={[styles.stripes, {backgroundColor: '#8A2F88'}]} />
             <View style={[styles.stripes, {backgroundColor: '#008FD1'}]} />
           </View>
-
           <TouchableOpacity
             style={styles.button}
             onPress={() => {
@@ -120,15 +134,25 @@ const HomeScreen = ({navigation}) => {
 };
 
 const styles = StyleSheet.create({
+  containerOfAll: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   topContainer: {
     flex: 1,
-    marginTop: 100,
-    justifyContent: 'flex-start',
-    alignItems: 'center',
+    marginTop: 200,
+    //justifyContent: 'flex-start',
+    flexGrow: 1,
+  },
+  bannerAdContainer: {
+    flex: 1,
+    //justifyContent: 'flex-start',
+    //alignItems: 'center',
   },
   bottomContainer: {
     flex: 1,
-    flexGrow: 2,
+    flexGrow: 1,
     justifyContent: 'flex-start',
     alignItems: 'center',
   },
