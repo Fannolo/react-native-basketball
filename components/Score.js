@@ -15,6 +15,7 @@ class Score extends Component {
             },
           ]}>
           <Text
+            allowFontScaling={false}
             style={[
               {
                 flex: 1,
@@ -37,6 +38,7 @@ class Score extends Component {
           ]}>
           {this.props.streak > 1 ? (
             <Text
+              allowFontScaling={false}
               style={[
                 {
                   flex: 1,

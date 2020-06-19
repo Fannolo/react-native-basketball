@@ -9,8 +9,10 @@ export default class Continue extends Component {
       <View style={styles.dialog}>
         <View>
           <Text
+            allowFontScaling={false}
             style={styles.continueText}>{`Continue from where you left?`}</Text>
           <Text
+            allowFontScaling={false}
             style={[
               styles.descriptionText,
               {marginTop: 10},
@@ -28,11 +30,12 @@ export default class Continue extends Component {
               resizeMode={'contain'}
             />
             {this.props.score > parseInt(this.props.highScore) ? (
-              <Text style={styles.continueText}>
+              <Text allowFontScaling={false} style={styles.continueText}>
                 {`Your new best score! ${this.props.score}`}
               </Text>
             ) : (
               <Text
+                allowFontScaling={false}
                 style={
                   styles.continueText
                 }>{`You scored ${this.props.score}`}</Text>
@@ -50,16 +53,28 @@ export default class Continue extends Component {
               onPress={() => {
                 this.props.onPressSuccess();
               }}>
-              <Text style={styles.confirmText}>Okay.</Text>
+              <Text allowFontScaling={false} style={styles.confirmText}>
+                Okay.
+              </Text>
             </TouchableOpacity>
             <TouchableOpacity
               onPress={() => {
                 this.props.onPressDeny();
               }}>
-              <Text style={styles.confirmText}>Nope.</Text>
+              <Text allowFontScaling={false} style={styles.confirmText}>
+                Nope.
+              </Text>
             </TouchableOpacity>
           </View>
         </View>
+        {/* <TouchableOpacity
+              onPress={() => {
+                rewarded.show();
+              }}>
+              <View style={[styles.interstitialAdContainer]}>
+                <Text >View ad to revive</Text>
+              </View>
+            </TouchableOpacity> */}
       </View>
     );
   }
