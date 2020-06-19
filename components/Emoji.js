@@ -65,6 +65,7 @@ class Emoji extends Component {
           },
         ]}>
         <Animated.Text
+          allowFontScaling={false}
           style={[
             {
               fontSize: 35,
