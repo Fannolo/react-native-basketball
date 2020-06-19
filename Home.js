@@ -63,7 +63,7 @@ const HomeScreen = ({navigation}) => {
           style={styles.videoContainer}
           blurType="dark"
           blurAmount={32}
-          reducedTransparencyFallbackColor="rgba(0,0,0,0.5)"
+          reducedTransparencyFallbackColor="rgba(0,0,0,0.6)"
         />
         <Video
           source={require('./assets/video/backgroundvideo.mov')}
@@ -78,12 +78,19 @@ const HomeScreen = ({navigation}) => {
           <View style={[styles.bannerAdContainer]}>
             <BannerAd
               size={BannerAdSize.MEDIUM_RECTANGLE}
-              unitId={__DEV__ ? TestIds.BANNER : AdMob.IOS.HOME_BANNER_ID}
+              unitId={
+                __DEV__
+                  ? TestIds.BANNER
+                  : Platform.OS === 'ios'
+                  ? AdMob.IOS.HOME_BANNER_ID
+                  : AdMob.ANDROID.HOME_BANNER_ID
+              }
             />
           </View>
           <View style={[styles.topContainer]}>
             {!!state.highScore && isFocused && (
               <Text
+                allowFontScaling={false}
                 style={{
                   color: '#f2f2f2',
                   fontWeight: '600',
@@ -116,7 +123,9 @@ const HomeScreen = ({navigation}) => {
               style={{width: 200, height: 200}}
               resizeMode={'contain'}
             />
-            <Text style={{color: '#f2f2f2', fontWeight: '600', fontSize: 34}}>
+            <Text
+              allowFontScaling={false}
+              style={{color: '#f2f2f2', fontWeight: '600', fontSize: 34}}>
               PLAY
             </Text>
           </TouchableOpacity>
@@ -182,6 +191,9 @@ const styles = StyleSheet.create({
     bottom: 0,
     right: 0,
     zIndex: -1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    alignContent: 'center',
   },
 });
 

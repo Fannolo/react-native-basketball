@@ -65,7 +65,11 @@ const FeedBackOptions = {
   enableVibrateFallback: true,
   ignoreAndroidSystemSettings: false,
 };
-const adUnit = __DEV__ ? TestIds.REWARDED : AdMob.IOS.GAMEPLAY_REWARD_ID;
+const adUnit = __DEV__
+  ? TestIds.REWARDED
+  : Platform.OS === 'ios'
+  ? AdMob.IOS.GAMEPLAY_REWARD_ID
+  : AdMob.ANDROID.GAMEPLAY_REWARD_ID;
 const rewarded = RewardedAd.createForAdRequest(adUnit, {
   //TODO: Pass the request non personlized ads only
   requestNonPersonalizedAdsOnly: true,
@@ -321,7 +325,10 @@ class Basketball extends Component {
 
   updateVelocity(nextState) {
     nextState.vx = this.state.vx;
-    if (nextState.lifecycle === LC_STARTING && nextState.y < NET_Y - 200) {
+    if (
+      nextState.lifecycle === LC_STARTING &&
+      nextState.y < NET_Y + this.state.randomNetYPosition - 200
+    ) {
       nextState.vy = this.state.vy;
     } else {
       nextState.vy = this.state.vy + gravity;
@@ -575,7 +582,13 @@ class Basketball extends Component {
           <View>
             <BannerAd
               size={BannerAdSize.SMART_BANNER}
-              unitId={__DEV__ ? TestIds.BANNER : AdMob.IOS.GAMEPLAY_BANNER_ID}
+              unitId={
+                __DEV__
+                  ? TestIds.BANNER
+                  : Platform.OS === 'ios'
+                  ? AdMob.IOS.GAMEPLAY_BANNER_ID
+                  : AdMob.ANDROID.GAMEPLAY_BANNER_ID
+              }
             />
           </View>
         </View>
