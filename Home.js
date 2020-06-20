@@ -3,7 +3,6 @@ import {
   Text,
   View,
   StyleSheet,
-  AsyncStorage,
   Image,
   StatusBar,
   Platform,
@@ -12,12 +11,12 @@ import React, {useEffect, useState} from 'react';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import Video from 'react-native-video';
 import {BlurView} from '@react-native-community/blur';
-import Sound from 'react-native-sound';
 import ReactNativeHapticFeedback from 'react-native-haptic-feedback';
 import {useIsFocused} from '@react-navigation/native';
 import {BannerAdSize, BannerAd, TestIds} from '@react-native-firebase/admob';
 import {AdMob, startSound, imageSizes} from './configs';
 import {translate} from './configs/i18n';
+import AsyncStorage from '@react-native-community/async-storage';
 
 const HomeScreen = ({navigation}) => {
   const [state, setState] = useState({
@@ -38,7 +37,11 @@ const HomeScreen = ({navigation}) => {
 
   const getHighScore = async () => {
     try {
-      setState({highScore: await AsyncStorage.getItem('highScore')});
+      const result = await AsyncStorage.getItem('adsConsent');
+      setState({
+        highScore: await AsyncStorage.getItem('highScore'),
+        requestNonPersonalizedAdsOnly: result === 'true' ? true : false,
+      });
     } catch (e) {
       console.log(e);
     }
@@ -76,6 +79,11 @@ const HomeScreen = ({navigation}) => {
                   ? AdMob.IOS.HOME_BANNER_ID
                   : AdMob.ANDROID.HOME_BANNER_ID
               }
+              requestOptions={{
+                requestNonPersonalizedAdsOnly: state.requestNonPersonalizedAdsOnly
+                  ? state.requestNonPersonalizedAdsOnly
+                  : true,
+              }}
             />
           </View>
           <View style={[styles.topContainer]}>
@@ -107,7 +115,11 @@ const HomeScreen = ({navigation}) => {
             onPress={() => {
               ReactNativeHapticFeedback.trigger('impactHeavy', FeedBackOptions);
               startSound.play();
-              navigation.navigate('Game', {highScore: state.highScore});
+              navigation.navigate('Game', {
+                highScore: state.highScore,
+                requestNonPersonalizedAdsOnly:
+                  state.requestNonPersonalizedAdsOnly,
+              });
             }}>
             <Image
               source={require('./assets/ballbasket.png')}

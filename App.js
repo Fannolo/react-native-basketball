@@ -20,6 +20,7 @@ import admob, {
   AdsConsentStatus,
 } from '@react-native-firebase/admob';
 import {AdMob} from './configs';
+import AsyncStorage from '@react-native-community/async-storage';
 
 const Stack = createStackNavigator();
 
@@ -53,14 +54,24 @@ const App = () => {
         consentInfo.isRequestLocationInEeaOrUnknown &&
         consentInfo.status === AdsConsentStatus.UNKNOWN
       ) {
-        await AdsConsent.showForm({
+        const formResult = await AdsConsent.showForm({
           //TODO: add a privacy policy page
           privacyPolicy: 'https://invertase.io/privacy-policy',
           withPersonalizedAds: true,
           withNonPersonalizedAds: true,
         });
+        console.log('form', formResult.status);
+        await AsyncStorage.setItem(
+          'adsConsent',
+          JSON.stringify(formResult.status),
+        );
+      } else if (consentInfo.status === AdsConsentStatus.PERSONALIZED) {
+        await AsyncStorage.setItem('adsConsent', 'false');
+      } else {
+        await AsyncStorage.setItem('adsConsent', 'true');
       }
     };
+    console.log('form', showFormForAccept());
     showFormForAccept();
     adMobConfig();
   }, []);

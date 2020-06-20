@@ -4,12 +4,10 @@ import {
   View,
   Dimensions,
   SafeAreaView,
-  AsyncStorage,
   StatusBar,
   Platform,
   BackHandler,
 } from 'react-native';
-
 import Ball from './components/Ball';
 import Hoop from './components/Hoop';
 import Net from './components/Net';
@@ -32,8 +30,7 @@ import {
   AdEventType,
 } from '@react-native-firebase/admob';
 import {AdMob, failure, backBoard, swishSound} from './configs';
-
-const Sound = require('react-native-sound');
+import AsyncStorage from '@react-native-community/async-storage';
 
 // physical variables
 const gravity = 0.6; // gravity
@@ -71,15 +68,15 @@ const adUnit = __DEV__
   : Platform.OS === 'ios'
   ? AdMob.IOS.GAMEPLAY_REWARD_ID
   : AdMob.ANDROID.GAMEPLAY_REWARD_ID;
-const rewarded = RewardedAd.createForAdRequest(adUnit, {
-  //TODO: Pass the request non personlized ads only
-  requestNonPersonalizedAdsOnly: true,
-  keywords: ['game'],
-});
 
 class Basketball extends Component {
   constructor(props) {
     super(props);
+    this.rewarded = RewardedAd.createForAdRequest(adUnit, {
+      requestNonPersonalizedAdsOnly: this.props.route.params
+        ?.requestNonPersonalizedAdsOnly,
+      keywords: ['game'],
+    });
     this.interval = null;
     // initialize ball states
     this.state = {
@@ -107,7 +104,7 @@ class Basketball extends Component {
       () => true,
     );
     this.interval = setInterval(this.update.bind(this), 1000 / 120);
-    this.eventListener = rewarded.onAdEvent((type, error, reward) => {
+    this.eventListener = this.rewarded.onAdEvent((type, error, reward) => {
       if (error) {
         this.setState({adMobError: true});
       }
@@ -121,7 +118,7 @@ class Basketball extends Component {
     });
 
     // Start loading the rewarded ad straight away
-    rewarded.load();
+    this.rewarded.load();
     console.disableYellowBox = true;
   }
 
@@ -550,6 +547,10 @@ class Basketball extends Component {
                   ? AdMob.IOS.GAMEPLAY_BANNER_ID
                   : AdMob.ANDROID.GAMEPLAY_BANNER_ID
               }
+              requestOptions={{
+                requestNonPersonalizedAdsOnly: this.props.route.params
+                  ?.requestNonPersonalizedAdsOnly,
+              }}
             />
           </View>
         </View>
@@ -578,8 +579,8 @@ class Basketball extends Component {
                 });
               }}
               onPressSuccess={async () => {
-                rewarded.show();
-                rewarded.onAdEvent((type, error, reward) => {
+                this.rewarded.show();
+                this.rewarded.onAdEvent((type, error, reward) => {
                   if (type === AdEventType.OPENED) {
                     this.setState({adOpened: true});
                   }
