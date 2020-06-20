@@ -29,6 +29,7 @@ import {
   TestIds,
   RewardedAd,
   RewardedAdEventType,
+  AdEventType,
 } from '@react-native-firebase/admob';
 import {AdMob} from './configs';
 
@@ -149,12 +150,15 @@ class Basketball extends Component {
     );
     this.interval = setInterval(this.update.bind(this), 1000 / 120);
     this.eventListener = rewarded.onAdEvent((type, error, reward) => {
+      if (error) {
+        this.setState({adMobError: true});
+      }
       if (type === RewardedAdEventType.LOADED) {
         this.setState({adLoaded: true});
       }
 
       if (type === RewardedAdEventType.EARNED_REWARD) {
-        console.log('User earned reward of ', reward);
+        this.setState({rewarded: true});
       }
     });
 
@@ -456,9 +460,9 @@ class Basketball extends Component {
       } else {
         this.failure.play();
         nextState.x = Dimensions.get('window').width / 2 - radius;
-        if (nextState.ad_played) {
+        if (nextState.ad_played || this.state.adMobError) {
           this.props.navigation.dispatch(CommonActions.goBack());
-          //nextState.dead = true;
+          //nextState.dead = true
         } else {
           nextState.dead = true;
           nextState.randomNetXPosition = 0;
@@ -614,12 +618,21 @@ class Basketball extends Component {
                   score: 0,
                 });
               }}
-              onPressSuccess={() => {
-                rewarded.show();
-                this.setState({
-                  dead: false,
-                  ad_played: true,
-                  x: Dimensions.get('window').width / 2 - radius,
+              onPressSuccess={async () => {
+                await rewarded.show();
+                rewarded.onAdEvent((type, error, reward) => {
+                  if (type === RewardedAdEventType.EARNED_REWARD) {
+                    this.setState({
+                      dead: false,
+                      rewarded: true,
+                      ad_played: true,
+                      x: Dimensions.get('window').width / 2 - radius,
+                    });
+                  }
+                  console.log('pippo', type);
+                  if (type === AdEventType.CLOSED && !this.state.rewarded) {
+                    this.props.navigation.dispatch(CommonActions.goBack());
+                  }
                 });
               }}
             />

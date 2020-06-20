@@ -2,8 +2,8 @@ import React, {Component} from 'react';
 import {View, Text, StyleSheet, Dimensions, Animated} from 'react-native';
 import {PropTypes} from 'prop-types';
 
-const happy = ['👋', '👌', '👍', '👏', '👐'];
-const sad = ['😢', '😓', '😒', '😳', '😭'];
+const happy = ['👋', '👌', '👍', '👏', '👐', '🎉', '⛹🏻‍♂️', '👾', '😟'];
+const sad = ['😢', '😓', '😒', '😳', '😭', '🥵', '😡', '🤬', '🤢', '🤮', '☠️'];
 const INITIAL_Y = 5;
 
 class Emoji extends Component {
@@ -59,18 +59,14 @@ class Emoji extends Component {
           styles.emojiContainer,
           {
             bottom: this.props.y,
-            width: 100,
-            height: 100,
             left: this.props.x,
           },
         ]}>
         <Animated.Text
           allowFontScaling={false}
           style={[
+            styles.emojis,
             {
-              fontSize: 35,
-              backgroundColor: 'transparent',
-
               opacity: this.state.fadeAnim,
               marginBottom: this.state.relativeY,
             },
@@ -87,6 +83,12 @@ const styles = StyleSheet.create({
     position: 'absolute',
     justifyContent: 'flex-end',
     alignItems: 'center',
+    width: 100,
+    height: 100,
+  },
+  emojis: {
+    fontSize: 35,
+    backgroundColor: 'transparent',
   },
 });
 
