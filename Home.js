@@ -16,7 +16,8 @@ import Sound from 'react-native-sound';
 import ReactNativeHapticFeedback from 'react-native-haptic-feedback';
 import {useIsFocused} from '@react-navigation/native';
 import {BannerAdSize, BannerAd, TestIds} from '@react-native-firebase/admob';
-import {AdMob} from './configs';
+import {AdMob, startSound, imageSizes} from './configs';
+import {translate} from './configs/i18n';
 
 const HomeScreen = ({navigation}) => {
   const [state, setState] = useState({
@@ -26,16 +27,6 @@ const HomeScreen = ({navigation}) => {
     enableVibrateFallback: true,
     ignoreAndroidSystemSettings: false,
   };
-
-  const swishSound = new Sound(
-    require('./assets/sounds/8bit-Video-Game-Startup-Short-01.m4a'),
-    (error) => {
-      if (error) {
-        console.log('failed to load the sound', error);
-        return;
-      }
-    },
-  );
 
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', async () => {
@@ -97,7 +88,7 @@ const HomeScreen = ({navigation}) => {
                   fontSize: 40,
                   textAlign: 'center',
                 }}>
-                {`BEST: ${state.highScore}`}
+                {`${translate('highScore')} ${state.highScore}`}
               </Text>
             )}
           </View>
@@ -115,18 +106,18 @@ const HomeScreen = ({navigation}) => {
             style={styles.button}
             onPress={() => {
               ReactNativeHapticFeedback.trigger('impactHeavy', FeedBackOptions);
-              swishSound.play();
+              startSound.play();
               navigation.navigate('Game', {highScore: state.highScore});
             }}>
             <Image
               source={require('./assets/ballbasket.png')}
-              style={{width: 200, height: 200}}
+              style={imageSizes}
               resizeMode={'contain'}
             />
             <Text
               allowFontScaling={false}
               style={{color: '#f2f2f2', fontWeight: '600', fontSize: 34}}>
-              PLAY
+              {translate('play')}
             </Text>
           </TouchableOpacity>
         </View>

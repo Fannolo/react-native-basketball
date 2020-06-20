@@ -1,102 +1,142 @@
 import React, {Component} from 'react';
-import {Text, View, Image} from 'react-native';
+import {Text, View, Animated} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
+import ReactNativeHapticFeedback from 'react-native-haptic-feedback';
+import {FeedBackOptions} from '../configs/FeedbackOptions';
+import {startSound} from '../configs/SoundConfigs';
+import {translate} from '../configs/i18n';
 
+const DEFAULT_TIME = 8;
 export default class Continue extends Component {
-  componentDidMount() {}
+  constructor(props) {
+    super(props);
+    this.state = {
+      dimensions: new Animated.Value(200),
+      spinAnim: new Animated.Value(0),
+      time: DEFAULT_TIME,
+      pressed: false,
+    };
+  }
+  componentDidMount() {
+    Animated.loop(
+      Animated.sequence([
+        Animated.timing(this.state.dimensions, {
+          toValue: 250,
+          duration: 500,
+          delay: 1000,
+        }),
+        Animated.timing(this.state.spinAnim, {
+          toValue: 1,
+          duration: 1500,
+        }),
+        Animated.timing(this.state.dimensions, {
+          toValue: 200,
+          duration: 500,
+        }),
+      ]),
+    ).start();
+
+    setInterval(() => {
+      if (this.state.time > 0) {
+        this.setState({time: this.state.time - 1});
+      }
+      if (
+        this.state.time === 0 &&
+        !this.props.rewarded &&
+        !this.props.openedAd
+      ) {
+        this.setState({time: DEFAULT_TIME});
+        this.props.onPressDeny();
+      }
+    }, 1000);
+  }
+
   render() {
+    const spin = this.state.spinAnim.interpolate({
+      inputRange: [0, 1],
+      outputRange: ['0deg', '360deg'],
+    });
     return (
       <View style={styles.dialog}>
-        <View>
+        <Text
+          allowFontScaling={false}
+          style={{
+            color: 'rgb(62,63,67)',
+            fontWeight: '600',
+            fontSize: 200,
+            textAlign: 'center',
+          }}>
+          {this.state.time}
+        </Text>
+        {this.props.score > parseInt(this.props.highScore) ? (
+          <Text allowFontScaling={false} style={styles.continueText}>
+            {`${translate('newHighScore')} ${this.props.score}`}
+          </Text>
+        ) : (
           <Text
             allowFontScaling={false}
-            style={styles.continueText}>{`Continue from where you left?`}</Text>
-          <Text
-            allowFontScaling={false}
-            style={[
-              styles.descriptionText,
-              {marginTop: 10},
-            ]}>{`If you press yes an ad will be displayed then you will resume from where you left`}</Text>
-          <View
+            style={styles.continueText}>{`${translate('score')} ${
+            this.props.score
+          }`}</Text>
+        )}
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => {
+            ReactNativeHapticFeedback.trigger('impactHeavy', FeedBackOptions);
+            this.setState({pressed: true});
+            this.props.onPressSuccess();
+            startSound.play();
+          }}>
+          <Animated.Image
+            source={require('../assets/ballbasket.png')}
             style={{
-              justifyContent: 'center',
-              alignItems: 'center',
-              marginTop: 20,
-              marginBottom: 20,
-            }}>
-            <Image
-              source={require('../assets/ballbasket.png')}
-              style={{width: 100, height: 100}}
-              resizeMode={'contain'}
-            />
-            {this.props.score > parseInt(this.props.highScore) ? (
-              <Text allowFontScaling={false} style={styles.continueText}>
-                {`Your new best score! ${this.props.score}`}
-              </Text>
-            ) : (
-              <Text
-                allowFontScaling={false}
-                style={
-                  styles.continueText
-                }>{`You scored ${this.props.score}`}</Text>
-            )}
-          </View>
+              width: this.state.dimensions,
+              height: this.state.dimensions,
+              transform: [{rotate: spin}],
+            }}
+            resizeMode={'contain'}
+          />
+        </TouchableOpacity>
+        <Text allowFontScaling={false} style={[styles.text]}>
+          {`${translate('watchAd')}`}
+        </Text>
 
-          <View
-            style={{
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-              marginHorizontal: 30,
-              marginVertical: 30,
-            }}>
-            <TouchableOpacity
-              onPress={() => {
-                this.props.onPressSuccess();
-              }}>
-              <Text allowFontScaling={false} style={styles.confirmText}>
-                Okay.
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() => {
-                this.props.onPressDeny();
-              }}>
-              <Text allowFontScaling={false} style={styles.confirmText}>
-                Nope.
-              </Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-        {/* <TouchableOpacity
-              onPress={() => {
-                rewarded.show();
-              }}>
-              <View style={[styles.interstitialAdContainer]}>
-                <Text >View ad to revive</Text>
-              </View>
-            </TouchableOpacity> */}
+        <TouchableOpacity onPress={() => this.props.onPressDeny()}>
+          <Text
+            allowFontScaling={false}
+            style={[styles.text, {paddingTop: 20}]}>
+            {`${translate('pressOutside')}`}
+          </Text>
+        </TouchableOpacity>
       </View>
     );
   }
 }
 
 const styles = {
+  text: {
+    color: '#f2f2f2',
+    fontWeight: '600',
+    textAlign: 'center',
+    fontSize: 20,
+  },
   dialog: {
     justifyContent: 'center',
     alignItems: 'center',
-    padding: 25,
-    borderRadius: 25,
-    width: 380,
-    height: 600,
-    borderWidth: 10,
-    borderColor: '#000',
     zIndex: 2,
-    backgroundColor: '#f2f2f2',
+  },
+  button: {
+    borderRadius: 40,
+    paddingVertical: 10,
+    paddingHorizontal: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   continueText: {
     textAlign: 'center',
     fontSize: 40,
     fontWeight: '600',
+    color: '#fff',
   },
   confirmText: {
     fontSize: 35,

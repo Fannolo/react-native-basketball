@@ -31,7 +31,7 @@ import {
   RewardedAdEventType,
   AdEventType,
 } from '@react-native-firebase/admob';
-import {AdMob} from './configs';
+import {AdMob, failure, backBoard, swishSound} from './configs';
 
 const Sound = require('react-native-sound');
 
@@ -80,49 +80,7 @@ const rewarded = RewardedAd.createForAdRequest(adUnit, {
 class Basketball extends Component {
   constructor(props) {
     super(props);
-
-    this.backBoard = new Sound(
-      require('./assets/sounds/Synth-Speedbump-Fast-01.m4a'),
-      (error) => {
-        if (error) {
-          console.log('failed to load the sound', error);
-          return;
-        }
-      },
-    );
-
-    this.swishSound = new Sound(
-      require('./assets/sounds/Synth-Whoosh-Big-01.m4a'),
-      (error) => {
-        if (error) {
-          console.log('failed to load the sound', error);
-          return;
-        }
-      },
-    );
-
-    this.failure = new Sound(
-      require('./assets/sounds/Synth-Pop-Big-01.m4a'),
-      (error) => {
-        if (error) {
-          console.log('failed to load the sound', error);
-          return;
-        }
-      },
-    );
-
-    this.failedAfter20Times = new Sound(
-      require('./assets/sounds/losingAfter20times.mp3'),
-      (error) => {
-        if (error) {
-          console.log('failed to load the sound', error);
-          return;
-        }
-      },
-    );
-
     this.interval = null;
-
     // initialize ball states
     this.state = {
       x: Dimensions.get('window').width / 2 - radius,
@@ -310,7 +268,7 @@ class Basketball extends Component {
     if (isLeftCollision) {
       nextState.colliding = true;
       //this.setState({colliding: true});
-      this.backBoard.play();
+      backBoard.play();
       ReactNativeHapticFeedback.trigger('impactMedium', FeedBackOptions);
       nextState.lifecycle = LC_BOUNCING;
       this.updateCollisionVelocity(nextState, ball, netLeftBorder);
@@ -319,7 +277,7 @@ class Basketball extends Component {
       if (isRightCollision) {
         nextState.colliding = true;
         //this.setState({colliding: true});
-        this.backBoard.play();
+        backBoard.play();
         ReactNativeHapticFeedback.trigger('impactMedium', FeedBackOptions);
         nextState.lifecycle = LC_BOUNCING;
         this.updateCollisionVelocity(nextState, ball, netRightBorder);
@@ -363,7 +321,7 @@ class Basketball extends Component {
           nextState.x + radius <
             NET_RIGHT_BORDER_X + this.state.randomNetXPosition
         ) {
-          this.swishSound.play();
+          swishSound.play();
           ReactNativeHapticFeedback.trigger('impactHeavy', FeedBackOptions);
           nextState.scored = true;
           if (!nextState.colliding) {
@@ -458,9 +416,9 @@ class Basketball extends Component {
           nextState.randomNetYPosition = this.getRandomInt(-150, 20);
         }
       } else {
-        this.failure.play();
+        failure.play();
         nextState.x = Dimensions.get('window').width / 2 - radius;
-        if (nextState.ad_played || this.state.adMobError) {
+        if (nextState.ad_played) {
           this.props.navigation.dispatch(CommonActions.goBack());
           //nextState.dead = true
         } else {
@@ -544,7 +502,6 @@ class Basketball extends Component {
         )}
         <View
           style={{
-            //backgroundColor: '#F4F4F4',
             backgroundColor: '#000',
             flex: 1,
           }}>
@@ -607,6 +564,8 @@ class Basketball extends Component {
             <Continue
               highScore={this.props.route.params?.highScore}
               score={this.state.score}
+              rewarded={this.state.rewarded}
+              openedAd={this.state.adOpened}
               onPressDeny={() => {
                 this.props.navigation.dispatch(CommonActions.goBack());
                 this.setState({
@@ -619,8 +578,11 @@ class Basketball extends Component {
                 });
               }}
               onPressSuccess={async () => {
-                await rewarded.show();
+                rewarded.show();
                 rewarded.onAdEvent((type, error, reward) => {
+                  if (type === AdEventType.OPENED) {
+                    this.setState({adOpened: true});
+                  }
                   if (type === RewardedAdEventType.EARNED_REWARD) {
                     this.setState({
                       dead: false,
@@ -629,7 +591,6 @@ class Basketball extends Component {
                       x: Dimensions.get('window').width / 2 - radius,
                     });
                   }
-                  console.log('pippo', type);
                   if (type === AdEventType.CLOSED && !this.state.rewarded) {
                     this.props.navigation.dispatch(CommonActions.goBack());
                   }
