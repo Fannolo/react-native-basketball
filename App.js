@@ -65,7 +65,10 @@ const App = () => {
           'adsConsent',
           JSON.stringify(formResult.status),
         );
-      } else if (consentInfo.status === AdsConsentStatus.PERSONALIZED) {
+      } else if (
+        consentInfo.status === AdsConsentStatus.PERSONALIZED ||
+        !consentInfo.isRequestLocationInEeaOrUnknown
+      ) {
         await AsyncStorage.setItem('adsConsent', 'false');
       } else {
         await AsyncStorage.setItem('adsConsent', 'true');
