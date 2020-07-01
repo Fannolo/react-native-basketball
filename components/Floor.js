@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {View, StyleSheet, Dimensions} from 'react-native';
 import {PropTypes} from 'prop-types';
+import { perfectSize } from '../configs';
 
 class Floor extends Component {
   render() {
@@ -16,16 +17,16 @@ const styles = StyleSheet.create({
     //borderTopColor: '#000',
     borderTopColor: '#fff',
     backgroundColor: '#000',
-    borderTopWidth: 20,
+    borderTopWidth: perfectSize(20),
     position: 'absolute',
     width: Dimensions.get('window').width,
-    paddingBottom: 100,
+    paddingBottom: perfectSize(100),
     bottom: 0,
   },
 });
 
 Floor.defaultProps = {
-  heght: 10,
+  heght: perfectSize(10),
 };
 
 Floor.propTypes = {

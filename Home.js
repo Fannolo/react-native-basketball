@@ -14,7 +14,7 @@ import {BlurView} from '@react-native-community/blur';
 import ReactNativeHapticFeedback from 'react-native-haptic-feedback';
 import {useIsFocused} from '@react-navigation/native';
 import {BannerAdSize, BannerAd, TestIds} from '@react-native-firebase/admob';
-import {AdMob, startSound, imageSizes} from './configs';
+import {AdMob, startSound, imageSizes, perfectSize, colors} from './configs';
 import {translate} from './configs/i18n';
 import AsyncStorage from '@react-native-community/async-storage';
 
@@ -91,9 +91,9 @@ const HomeScreen = ({navigation}) => {
               <Text
                 allowFontScaling={false}
                 style={{
-                  color: '#f2f2f2',
+                  color: colors.lightGrey,
                   fontWeight: '600',
-                  fontSize: 40,
+                  fontSize: perfectSize(40),
                   textAlign: 'center',
                 }}>
                 {`${translate('highScore')} ${state.highScore}`}
@@ -103,12 +103,16 @@ const HomeScreen = ({navigation}) => {
         </View>
         <View style={styles.bottomContainer}>
           <View style={styles.stripeContainer}>
-            <View style={[styles.stripes, {backgroundColor: '#4DB03D'}]} />
-            <View style={[styles.stripes, {backgroundColor: '#F8A925'}]} />
-            <View style={[styles.stripes, {backgroundColor: '#F3701E'}]} />
-            <View style={[styles.stripes, {backgroundColor: '#DC2835'}]} />
-            <View style={[styles.stripes, {backgroundColor: '#8A2F88'}]} />
-            <View style={[styles.stripes, {backgroundColor: '#008FD1'}]} />
+            <View
+              style={[styles.stripes, {backgroundColor: colors.appleGreen}]}
+            />
+            <View style={[styles.stripes, {backgroundColor: colors.yellow}]} />
+            <View style={[styles.stripes, {backgroundColor: colors.orange}]} />
+            <View style={[styles.stripes, {backgroundColor: colors.red}]} />
+            <View style={[styles.stripes, {backgroundColor: colors.purple}]} />
+            <View
+              style={[styles.stripes, {backgroundColor: colors.lightBlue}]}
+            />
           </View>
           <TouchableOpacity
             style={styles.button}
@@ -128,7 +132,11 @@ const HomeScreen = ({navigation}) => {
             />
             <Text
               allowFontScaling={false}
-              style={{color: '#f2f2f2', fontWeight: '600', fontSize: 34}}>
+              style={{
+                color: colors.lightGrey,
+                fontWeight: '600',
+                fontSize: perfectSize(34),
+              }}>
               {translate('play')}
             </Text>
           </TouchableOpacity>
@@ -146,7 +154,7 @@ const styles = StyleSheet.create({
   },
   topContainer: {
     flex: 1,
-    marginTop: 200,
+    marginTop: perfectSize(200),
     //justifyContent: 'flex-start',
     flexGrow: 1,
   },
@@ -169,13 +177,13 @@ const styles = StyleSheet.create({
   },
   stripes: {
     width: '150%',
-    height: 40,
+    height: perfectSize(40),
     transform: [{rotate: '20deg'}],
   },
   button: {
-    borderRadius: 40,
-    paddingVertical: 10,
-    paddingHorizontal: 10,
+    borderRadius: perfectSize(40),
+    paddingVertical: perfectSize(10),
+    paddingHorizontal: perfectSize(10),
     justifyContent: 'center',
     alignItems: 'center',
   },

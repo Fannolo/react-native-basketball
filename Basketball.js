@@ -29,23 +29,23 @@ import {
   RewardedAdEventType,
   AdEventType,
 } from '@react-native-firebase/admob';
-import {AdMob, failure, backBoard, swishSound} from './configs';
+import {AdMob, failure, backBoard, swishSound, perfectSize} from './configs';
 import AsyncStorage from '@react-native-community/async-storage';
 
 // physical variables
 const gravity = 0.6; // gravity
-const radius = 48; // ball radius
+const radius = perfectSize(48); // ball radius
 const rotationFactor = 10; // ball rotation factor
 
 // components sizes and positions
-const FLOOR_HEIGHT = 60;
-const FLOOR_Y = 11;
-const HOOP_Y = Dimensions.get('window').height - 227;
-const NET_HEIGHT = 6;
-const NET_WIDTH = 83;
-const NET_Y = Dimensions.get('window').height - 216;
+const FLOOR_HEIGHT = perfectSize(60);
+const FLOOR_Y = perfectSize(11);
+const HOOP_Y = Dimensions.get('window').height - perfectSize(227);
+const NET_HEIGHT = perfectSize(6);
+const NET_WIDTH = perfectSize(83);
+const NET_Y = Dimensions.get('window').height - perfectSize(216);
 const NET_X = Dimensions.get('window').width / 2 - NET_WIDTH / 2;
-const EMOJI_X = Dimensions.get('window').width / 2 - 50;
+const EMOJI_X = Dimensions.get('window').width / 2 - perfectSize(50);
 const NET_LEFT_BORDER_X = NET_X + NET_HEIGHT / 2;
 const NET_LEFT_BORDER_Y = NET_Y;
 const NET_RIGHT_BORDER_X = NET_X + NET_WIDTH - NET_HEIGHT / 2;
@@ -133,7 +133,7 @@ class Basketball extends Component {
     if (this.state.lifecycle === LC_WAITING) {
       this.setState({
         vx: angle * 0.2,
-        vy: -16,
+        vy: perfectSize(-16),
         lifecycle: LC_STARTING,
       });
     }
@@ -286,7 +286,7 @@ class Basketball extends Component {
     nextState.vx = this.state.vx;
     if (
       nextState.lifecycle === LC_STARTING &&
-      nextState.y < NET_Y + this.state.randomNetYPosition - 200
+      nextState.y < NET_Y + this.state.randomNetYPosition - perfectSize(200)
     ) {
       nextState.vy = this.state.vy;
     } else {
@@ -384,8 +384,8 @@ class Basketball extends Component {
     }
 
     const outOfScreen =
-      nextState.x > Dimensions.get('window').width + 100 ||
-      nextState.x < 0 - radius * 2 - 100;
+      nextState.x > Dimensions.get('window').width + perfectSize(100) ||
+      nextState.x < 0 - radius * 2 - perfectSize(100);
 
     if (
       outOfScreen === true ||
@@ -409,8 +409,14 @@ class Basketball extends Component {
         //nextState.x = Dimensions.get('window').width / 2 - radius;
 
         if (this.state.score >= 10) {
-          nextState.randomNetXPosition = this.getRandomInt(-100, 100);
-          nextState.randomNetYPosition = this.getRandomInt(-150, 20);
+          nextState.randomNetXPosition = this.getRandomInt(
+            perfectSize(-100),
+            perfectSize(100),
+          );
+          nextState.randomNetYPosition = this.getRandomInt(
+            perfectSize(-150),
+            perfectSize(20),
+          );
         }
       } else {
         failure.play();
@@ -426,7 +432,7 @@ class Basketball extends Component {
         }
       }
       // nextState.x = Dimensions.get('window').width / 2 - radius;
-      nextState.vy = -8;
+      nextState.vy = perfectSize(-8);
       nextState.vx = 0;
       nextState.scale = 1;
       nextState.rotate = 0;
@@ -514,7 +520,7 @@ class Basketball extends Component {
                 y={HOOP_Y + this.state.randomNetYPosition}
                 x={
                   Dimensions.get('window').width / 2 -
-                  200 / 2 +
+                  perfectSize(200) / 2 +
                   this.state.randomNetXPosition
                 }
               />
@@ -607,11 +613,11 @@ class Basketball extends Component {
 
 const styles = StyleSheet.create({
   interstitialAdContainer: {
-    width: 200,
+    width: perfectSize(200),
     zIndex: 2,
     flex: 1,
-    height: 200,
-    borderRadius: 50,
+    height: perfectSize(200),
+    borderRadius: perfectSize(50),
     backgroundColor: 'rgba(0,0,0,0.1)',
   },
   overlayContainer: {

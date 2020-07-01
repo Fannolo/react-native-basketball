@@ -5,13 +5,14 @@ import ReactNativeHapticFeedback from 'react-native-haptic-feedback';
 import {FeedBackOptions} from '../configs/FeedbackOptions';
 import {startSound} from '../configs/SoundConfigs';
 import {translate} from '../configs/i18n';
+import {perfectSize} from '../configs';
 
 const DEFAULT_TIME = 8;
 export default class Continue extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      dimensions: new Animated.Value(200),
+      dimensions: new Animated.Value(perfectSize(200)),
       spinAnim: new Animated.Value(0),
       time: DEFAULT_TIME,
       pressed: false,
@@ -21,7 +22,7 @@ export default class Continue extends Component {
     Animated.loop(
       Animated.sequence([
         Animated.timing(this.state.dimensions, {
-          toValue: 250,
+          toValue: perfectSize(250),
           duration: 500,
           delay: 1000,
         }),
@@ -30,7 +31,7 @@ export default class Continue extends Component {
           duration: 1500,
         }),
         Animated.timing(this.state.dimensions, {
-          toValue: 200,
+          toValue: perfectSize(200),
           duration: 500,
         }),
       ]),
@@ -63,7 +64,7 @@ export default class Continue extends Component {
           style={{
             color: 'rgb(62,63,67)',
             fontWeight: '600',
-            fontSize: 200,
+            fontSize: perfectSize(200),
             textAlign: 'center',
           }}>
           {this.state.time}
@@ -104,7 +105,7 @@ export default class Continue extends Component {
         <TouchableOpacity onPress={() => this.props.onPressDeny()}>
           <Text
             allowFontScaling={false}
-            style={[styles.text, {paddingTop: 20}]}>
+            style={[styles.text, {paddingTop: perfectSize(20)}]}>
             {`${translate('pressOutside')}`}
           </Text>
         </TouchableOpacity>
@@ -118,7 +119,7 @@ const styles = {
     color: '#f2f2f2',
     fontWeight: '600',
     textAlign: 'center',
-    fontSize: 20,
+    fontSize: perfectSize(20),
   },
   dialog: {
     justifyContent: 'center',
@@ -126,25 +127,25 @@ const styles = {
     zIndex: 2,
   },
   button: {
-    borderRadius: 40,
-    paddingVertical: 10,
-    paddingHorizontal: 10,
+    borderRadius: perfectSize(40),
+    paddingVertical: perfectSize(10),
+    paddingHorizontal: perfectSize(10),
     justifyContent: 'center',
     alignItems: 'center',
   },
   continueText: {
     textAlign: 'center',
-    fontSize: 40,
+    fontSize: perfectSize(40),
     fontWeight: '600',
     color: '#fff',
   },
   confirmText: {
-    fontSize: 35,
+    fontSize: perfectSize(35),
     fontWeight: '600',
   },
   descriptionText: {
     textAlign: 'center',
-    fontSize: 20,
+    fontSize: perfectSize(20),
     fontWeight: '400',
   },
 };
