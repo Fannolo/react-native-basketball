@@ -103,7 +103,7 @@ class Basketball extends Component {
       'hardwareBackPress',
       () => true,
     );
-    this.interval = setInterval(this.update.bind(this), 1000 / 120);
+    this.interval = setInterval(this.update.bind(this), 1000 / 60);
     this.eventListener = this.rewarded.onAdEvent((type, error, reward) => {
       if (error) {
         this.setState({adMobError: true});

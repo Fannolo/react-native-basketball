@@ -1,10 +1,23 @@
 import React, {Component} from 'react';
 import {View, Text, StyleSheet, Dimensions, Animated} from 'react-native';
 import {PropTypes} from 'prop-types';
+import {perfectSize} from '../configs';
 
-const happy = ['👋', '👌', '👍', '👏', '👐', '🎉', '⛹🏻‍♂️', '👾', '😟'];
+const happy = [
+  '👋',
+  '👌',
+  '👍',
+  '👏',
+  '👐',
+  '🎉',
+  '⛹🏻‍♂️',
+  '👾',
+  '😟',
+  '😟',
+  '😟',
+];
 const sad = ['😢', '😓', '😒', '😳', '😭', '🥵', '😡', '🤬', '🤢', '🤮', '☠️'];
-const INITIAL_Y = 5;
+const INITIAL_Y = perfectSize(5);
 
 class Emoji extends Component {
   constructor(props) {
@@ -33,17 +46,17 @@ class Emoji extends Component {
 
       Animated.timing(this.state.fadeAnim, {toValue: 1}).start();
 
-      Animated.timing(this.state.relativeY, {toValue: 15}).start();
+      Animated.timing(this.state.relativeY, {toValue: perfectSize(15)}).start();
     } else if (nextProps.scored === null && this.props.scored !== null) {
       Animated.timing(this.state.fadeAnim, {toValue: 0}).start();
 
-      Animated.timing(this.state.relativeY, {toValue: 40}).start();
+      Animated.timing(this.state.relativeY, {toValue: perfectSize(40)}).start();
     }
   }
 
   getEmoji(isHappy = true) {
     const min = 0;
-    const max = 4;
+    const max = 11;
     const random = Math.floor(Math.random() * (max - min + 1)) + min;
 
     if (isHappy === true) {
@@ -83,11 +96,11 @@ const styles = StyleSheet.create({
     position: 'absolute',
     justifyContent: 'flex-end',
     alignItems: 'center',
-    width: 100,
-    height: 100,
+    width: perfectSize(100),
+    height: perfectSize(100),
   },
   emojis: {
-    fontSize: 35,
+    fontSize: perfectSize(35),
     backgroundColor: 'transparent',
   },
 });

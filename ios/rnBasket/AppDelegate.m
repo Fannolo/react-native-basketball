@@ -31,13 +31,7 @@ static void InitializeFlipper(UIApplication *application) {
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-  
-
-    if ([FIRApp defaultApp] == nil) {
-      [FIRApp configure];
-    }
  
-  
 #if DEBUG
   InitializeFlipper(application);
 #endif
@@ -55,6 +49,7 @@ static void InitializeFlipper(UIApplication *application) {
   self.window.rootViewController = rootViewController;
   [self.window makeKeyAndVisible];
   //[RNSplashScreen showSplash:@"LaunchScreen" inRootView:rootView];
+  [FIRApp configure];
   return YES;
 }
 

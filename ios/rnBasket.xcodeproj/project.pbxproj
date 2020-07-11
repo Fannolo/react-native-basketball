@@ -18,7 +18,7 @@
 		2D02E4BF1E0B4AB3006451C7 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		2DCD954D1E0B4F2C00145EB5 /* rnBasketTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* rnBasketTests.m */; };
 		D8AF4818190BB2486A263F32 /* libPods-rnBasket-tvOSTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = CEE8AE6C0420B61412391B4A /* libPods-rnBasket-tvOSTests.a */; };
-		E97BB35C2495168C007CC753 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = E97BB35B2495168C007CC753 /* GoogleService-Info.plist */; };
+		E96DD78424BA50D1005450BF /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = E96DD78324BA50D1005450BF /* GoogleService-Info.plist */; };
 		EBCAE39A1DC05C23D40D468E /* libPods-rnBasket.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 91156D6E06F8262BE312A90E /* libPods-rnBasket.a */; };
 		EBDA871705324C2201D3D367 /* libPods-rnBasket-rnBasketTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 26E60C264F9F6461446192DD /* libPods-rnBasket-rnBasketTests.a */; };
 /* End PBXBuildFile section */
@@ -66,9 +66,9 @@
 		C24C908EC2E8F553DED4151F /* Pods-rnBasket-tvOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-rnBasket-tvOS.release.xcconfig"; path = "Target Support Files/Pods-rnBasket-tvOS/Pods-rnBasket-tvOS.release.xcconfig"; sourceTree = "<group>"; };
 		CC27C3706A228EE755477B39 /* Pods-rnBasket-tvOSTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-rnBasket-tvOSTests.release.xcconfig"; path = "Target Support Files/Pods-rnBasket-tvOSTests/Pods-rnBasket-tvOSTests.release.xcconfig"; sourceTree = "<group>"; };
 		CEE8AE6C0420B61412391B4A /* libPods-rnBasket-tvOSTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-rnBasket-tvOSTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		E96DD78324BA50D1005450BF /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../../Downloads/GoogleService-Info.plist"; sourceTree = "<group>"; };
 		E97847EE249EABAB00758D35 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/LaunchScreen.strings"; sourceTree = "<group>"; };
 		E97847EF249EABB300758D35 /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
-		E97BB35B2495168C007CC753 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		ED2971642150620600B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS12.0.sdk/System/Library/Frameworks/JavaScriptCore.framework; sourceTree = DEVELOPER_DIR; };
 /* End PBXFileReference section */
@@ -129,6 +129,7 @@
 		13B07FAE1A68108700A75B9A /* rnBasket */ = {
 			isa = PBXGroup;
 			children = (
+				E96DD78324BA50D1005450BF /* GoogleService-Info.plist */,
 				008F07F21AC5B25A0029DE68 /* main.jsbundle */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.m */,
@@ -163,7 +164,6 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
-				E97BB35B2495168C007CC753 /* GoogleService-Info.plist */,
 				13B07FAE1A68108700A75B9A /* rnBasket */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
 				00E356EF1AD99517003FC87E /* rnBasketTests */,
@@ -349,8 +349,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
+				E96DD78424BA50D1005450BF /* GoogleService-Info.plist in Resources */,
 				13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */,
-				E97BB35C2495168C007CC753 /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

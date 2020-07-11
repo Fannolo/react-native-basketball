@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {View, Text, StyleSheet, Dimensions} from 'react-native';
 import {PropTypes} from 'prop-types';
+import {perfectSize, colors} from '../configs';
 
 class Score extends Component {
   render() {
@@ -19,9 +20,9 @@ class Score extends Component {
             style={[
               {
                 flex: 1,
-                fontSize: 130,
+                fontSize: perfectSize(130),
                 fontWeight: '500',
-                color: 'rgba(255,255,255,0.3)',
+                color: colors.transparentWhite,
                 zIndex: 2,
               },
             ]}>
@@ -32,7 +33,7 @@ class Score extends Component {
           style={[
             styles.scoreContainer,
             {
-              bottom: this.props.y - 40,
+              bottom: this.props.y - perfectSize(40),
               width: Dimensions.get('window').width,
             },
           ]}>
@@ -42,10 +43,10 @@ class Score extends Component {
               style={[
                 {
                   flex: 1,
-                  fontSize: 50,
+                  fontSize: perfectSize(50),
                   fontWeight: '500',
                   //color: 'rgba(0,0,0,0.1)',
-                  color: 'rgba(255,255,255,0.3)',
+                  color: colors.transparentWhite,
                   zIndex: 2,
                 },
               ]}>

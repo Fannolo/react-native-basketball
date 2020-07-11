@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {View, StyleSheet} from 'react-native';
 import {PropTypes} from 'prop-types';
+import {perfectSize, colors} from '../configs';
 
 class Net extends Component {
   render() {
@@ -23,16 +24,16 @@ class Net extends Component {
 const styles = StyleSheet.create({
   netContainer: {
     position: 'absolute',
-    backgroundColor: '#ff260f',
-    borderRadius: 3,
+    backgroundColor: colors.veryRed,
+    borderRadius: perfectSize(3),
   },
 });
 
 Net.defaultProps = {
   x: 0,
   y: 0,
-  height: 50,
-  width: 50,
+  height: perfectSize(50),
+  width: perfectSize(50),
 };
 
 Net.propTypes = {

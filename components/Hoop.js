@@ -1,10 +1,10 @@
 import React, {Component} from 'react';
 import {View, StyleSheet, Dimensions} from 'react-native';
 import {PropTypes} from 'prop-types';
-import {perfectSize} from '../configs';
+import {perfectSize, colors} from '../configs';
 
 class Hoop extends Component {
-  p
+  p;
   render() {
     return (
       <View
@@ -24,26 +24,26 @@ class Hoop extends Component {
 const styles = StyleSheet.create({
   hoopContainer: {
     //backgroundColor: '#F4F4F4',
-    backgroundColor: '#000',
+    backgroundColor: colors.black,
     position: 'absolute',
     // left: ,
     width: perfectSize(200),
     height: perfectSize(112),
     alignItems: 'center',
-    borderWidth: 5,
+    borderWidth: perfectSize(5),
     //borderColor: '#b7b7b7',
-    borderColor: '#fff',
-    borderRadius: 4,
+    borderColor: colors.white,
+    borderRadius: perfectSize(4),
   },
   hoopContained: {
     //backgroundColor: '#F4F4F4',
-    backgroundColor: '#000',
+    backgroundColor: colors.black,
     width: perfectSize(80),
     height: perfectSize(54),
-    marginTop:  perfectSize(38),
-    borderWidth: 5,
+    marginTop: perfectSize(38),
+    borderWidth: perfectSize(5),
     //borderColor: '#b7b7b7',
-    borderColor: '#fff',
+    borderColor: colors.white,
   },
 });
 

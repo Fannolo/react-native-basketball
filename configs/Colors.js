@@ -8,4 +8,6 @@ export const colors = {
   lightBlue: '#008FD1',
   white: '#fff',
   black: '#000',
+  veryRed: '#ff260f',
+  transparentWhite: 'rgba(255,255,255,0.3)',
 };

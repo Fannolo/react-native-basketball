@@ -5,7 +5,7 @@ import ReactNativeHapticFeedback from 'react-native-haptic-feedback';
 import {FeedBackOptions} from '../configs/FeedbackOptions';
 import {startSound} from '../configs/SoundConfigs';
 import {translate} from '../configs/i18n';
-import {perfectSize} from '../configs';
+import {perfectSize, colors} from '../configs';
 
 const DEFAULT_TIME = 8;
 export default class Continue extends Component {
@@ -86,7 +86,7 @@ export default class Continue extends Component {
             ReactNativeHapticFeedback.trigger('impactHeavy', FeedBackOptions);
             this.setState({pressed: true});
             this.props.onPressSuccess();
-            startSound.play();
+            //startSound.play();
           }}>
           <Animated.Image
             source={require('../assets/ballbasket.png')}
@@ -116,7 +116,7 @@ export default class Continue extends Component {
 
 const styles = {
   text: {
-    color: '#f2f2f2',
+    color: colors.lightGrey,
     fontWeight: '600',
     textAlign: 'center',
     fontSize: perfectSize(20),
@@ -137,7 +137,7 @@ const styles = {
     textAlign: 'center',
     fontSize: perfectSize(40),
     fontWeight: '600',
-    color: '#fff',
+    color: colors.white,
   },
   confirmText: {
     fontSize: perfectSize(35),
