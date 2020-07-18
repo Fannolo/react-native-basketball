@@ -25,14 +25,17 @@ export default class Continue extends Component {
           toValue: perfectSize(250),
           duration: 500,
           delay: 1000,
+          useNativeDriver: false,
         }),
         Animated.timing(this.state.spinAnim, {
           toValue: 1,
           duration: 1500,
+          useNativeDriver: false,
         }),
         Animated.timing(this.state.dimensions, {
           toValue: perfectSize(200),
           duration: 500,
+          useNativeDriver: false,
         }),
       ]),
     ).start();

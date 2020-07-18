@@ -44,13 +44,25 @@ class Emoji extends Component {
 
       this.state.relativeY.setValue(INITIAL_Y);
 
-      Animated.timing(this.state.fadeAnim, {toValue: 1}).start();
+      Animated.timing(this.state.fadeAnim, {
+        toValue: 1,
+        useNativeDriver: false,
+      }).start();
 
-      Animated.timing(this.state.relativeY, {toValue: perfectSize(15)}).start();
+      Animated.timing(this.state.relativeY, {
+        toValue: perfectSize(15),
+        useNativeDriver: false,
+      }).start();
     } else if (nextProps.scored === null && this.props.scored !== null) {
-      Animated.timing(this.state.fadeAnim, {toValue: 0}).start();
+      Animated.timing(this.state.fadeAnim, {
+        toValue: 0,
+        useNativeDriver: false,
+      }).start();
 
-      Animated.timing(this.state.relativeY, {toValue: perfectSize(40)}).start();
+      Animated.timing(this.state.relativeY, {
+        toValue: perfectSize(40),
+        useNativeDriver: false,
+      }).start();
     }
   }
 

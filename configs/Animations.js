@@ -10,6 +10,7 @@ export const increaseSize = (object) => {
     toValue: SHRINK,
     duration: DURATION,
     delay: 1000,
+    useNativeDriver: false,
   }).start();
 };
 
@@ -17,5 +18,6 @@ export const decreaseSize = (object) => {
   Animated.timing(object, {
     toValue: ENLARGE,
     duration: DURATION,
+    useNativeDriver: false,
   });
 };

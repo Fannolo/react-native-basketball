@@ -2,7 +2,7 @@ import I18n, {getLanguages} from 'react-native-i18n';
 
 export const translate = (key) => {
   getLanguages().then((languages) => {
-    console.log('languages: ', languages, I18n.locale); // ['en-US', 'en']
+    //console.log('languages: ', languages, I18n.locale); // ['en-US', 'en']
   });
   return I18n.t(key);
 };

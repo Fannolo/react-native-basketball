@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>26181073899-j5e2hcpktbpmucr0rl92jtqgeuk3sih9.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.26181073899-j5e2hcpktbpmucr0rl92jtqgeuk3sih9</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>26181073899-3suqoa31uld679ngnl0jib59f46gbpht.apps.googleusercontent.com</string>
+	<key>API_KEY</key>
+	<string>AIzaSyB4siWALeqKC6Lm7w26zjpmE4kl8TiH-60</string>
+	<key>GCM_SENDER_ID</key>
+	<string>26181073899</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.variablecompany.classicBasket</string>
+	<key>PROJECT_ID</key>
+	<string>messy-dunk</string>
+	<key>STORAGE_BUCKET</key>
+	<string>messy-dunk.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:26181073899:ios:1397772c868c6c0d4bb7ae</string>
+	<key>DATABASE_URL</key>
+	<string>https://messy-dunk.firebaseio.com</string>
+	<key>ADMOB_APP_ID</key>
+	<string>ca-app-pub-3162603114593392~5826133710</string>
+</dict>
+</plist>

@@ -37,7 +37,11 @@ const HomeScreen = ({navigation}) => {
 
   const getHighScore = async () => {
     try {
-      const result = await AsyncStorage.getItem('adsConsent');
+      const result = await AsyncStorage.getItem(
+        'requestNonPersonalizedAdsOnly',
+      );
+
+      console.log('requestNonPersonalizedAdsOnly: ', result);
       setState({
         highScore: await AsyncStorage.getItem('highScore'),
         requestNonPersonalizedAdsOnly: result === 'true' ? true : false,

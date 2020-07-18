@@ -1,3 +1,4 @@
+/* eslint-disable react-native/no-inline-styles */
 import React, {Component} from 'react';
 import {
   StyleSheet,
@@ -85,7 +86,7 @@ class Basketball extends Component {
       vx: 0,
       vy: 0,
       rotate: 0,
-      scale: 1,
+      scale: perfectSize(1),
       lifecycle: LC_WAITING,
       scored: null,
       score: 0,
@@ -146,7 +147,7 @@ class Basketball extends Component {
   circlesColliding(circle1, circle2) {
     const dx = circle1.x - circle2.x;
     const dy = circle1.y - circle2.y;
-    const distance = Math.sqrt(dx * dx + dy * dy);
+    const distance = Math.sqrt(dx * dx + dy * dy); // basically is RADIX((x2-x1)^2 - (y2-y1)^2)
 
     if (distance < circle1.radius + circle2.radius) {
       return true;
@@ -213,9 +214,11 @@ class Basketball extends Component {
     if (
       nextState.lifecycle !== LC_FALLING &&
       nextState.lifecycle !== LC_BOUNCING
-    )
+    ) {
       return;
+    }
 
+    // eslint-disable-next-line consistent-this
     const _self = this;
 
     const ball = {
@@ -233,7 +236,7 @@ class Basketball extends Component {
       mass: 2,
     };
     const netLeftBorder = {
-      x: NET_LEFT_BORDER_X + this.state.randomNetXPosition,
+      x: NET_LEFT_BORDER_X + this.state.randomNetXPosition - 10,
       y: NET_LEFT_BORDER_Y + this.state.randomNetYPosition,
       radius: NET_HEIGHT / 2,
       velocity: {
@@ -308,9 +311,9 @@ class Basketball extends Component {
     if (this.state.scored === null) {
       if (
         this.state.y + radius >=
-          NET_Y + NET_HEIGHT / 2 + this.state.randomNetYPosition &&
+          NET_Y + this.state.randomNetYPosition + NET_HEIGHT &&
         nextState.y + radius <=
-          NET_Y + NET_HEIGHT / 2 + this.state.randomNetYPosition
+          NET_Y + this.state.randomNetYPosition + NET_HEIGHT
       ) {
         if (
           nextState.x + radius >
@@ -347,12 +350,13 @@ class Basketball extends Component {
       nextState.lifecycle === LC_BOUNCING ||
       nextState.lifecycle === LC_RESTARTING ||
       nextState.lifecycle === LC_RESTARTING_FALLING
-    )
+    ) {
       return;
+    }
 
     let scale = this.state.scale;
-    if (scale > 0.4 && this.state.y > FLOOR_HEIGHT) {
-      scale -= 0.01;
+    if (scale > perfectSize(0.4) && this.state.y > FLOOR_HEIGHT) {
+      scale -= perfectSize(0.01);
     }
 
     nextState.scale = scale;
@@ -377,7 +381,7 @@ class Basketball extends Component {
       nextState.vx = 0;
       nextState.vy = 0;
       nextState.rotate = 0;
-      nextState.scale = 1;
+      nextState.scale = perfectSize(1);
       nextState.lifecycle = LC_WAITING;
 
       nextState.scored = null;
@@ -434,7 +438,7 @@ class Basketball extends Component {
       // nextState.x = Dimensions.get('window').width / 2 - radius;
       nextState.vy = perfectSize(-8);
       nextState.vx = 0;
-      nextState.scale = 1;
+      nextState.scale = perfectSize(1);
       nextState.rotate = 0;
       nextState.lifecycle = LC_RESTARTING;
     }
@@ -443,6 +447,7 @@ class Basketball extends Component {
   async updateHighScore(nextState) {
     if (nextState.scored === false) {
       let highScore = await AsyncStorage.getItem('highScore');
+      // eslint-disable-next-line radix
       if (this.state.score > parseInt(highScore) || !highScore) {
         await AsyncStorage.setItem(
           'highScore',
@@ -453,7 +458,9 @@ class Basketball extends Component {
   }
 
   update() {
-    if (this.state.lifecycle === LC_WAITING) return;
+    if (this.state.lifecycle === LC_WAITING) {
+      return;
+    }
 
     let nextState = null;
     nextState = Object.assign({}, this.state);

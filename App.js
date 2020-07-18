@@ -61,20 +61,23 @@ const App = () => {
           withNonPersonalizedAds: true,
         });
         console.log('form', formResult.status);
-        await AsyncStorage.setItem(
-          'adsConsent',
-          JSON.stringify(formResult.status),
-        );
+        if (
+          consentInfo.status === AdsConsentStatus.PERSONALIZED ||
+          !consentInfo.isRequestLocationInEeaOrUnknown
+        ) {
+          AsyncStorage.setItem('requestNonPersonalizedAdsOnly', 'false');
+        } else {
+          AsyncStorage.setItem('requestNonPersonalizedAdsOnly', 'true');
+        }
       } else if (
         consentInfo.status === AdsConsentStatus.PERSONALIZED ||
         !consentInfo.isRequestLocationInEeaOrUnknown
       ) {
-        await AsyncStorage.setItem('adsConsent', 'false');
+        AsyncStorage.setItem('requestNonPersonalizedAdsOnly', 'false');
       } else {
-        await AsyncStorage.setItem('adsConsent', 'true');
+        AsyncStorage.setItem('requestNonPersonalizedAdsOnly', 'true');
       }
     };
-    console.log('form', showFormForAccept());
     showFormForAccept();
     adMobConfig();
   }, []);
