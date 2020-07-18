@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {StyleSheet, TouchableOpacity, Image} from 'react-native';
 import {PropTypes} from 'prop-types';
+import {perfectSize} from '../configs';
 
 class Ball extends Component {
   constructor(props) {
@@ -62,7 +63,7 @@ class Ball extends Component {
             {
               width: this.props.radius * 2,
               height: this.props.radius * 2,
-              borderRadius: 1,
+              borderRadius: perfectSize(1),
               backgroundColor: 'transparent',
               transform: [
                 {rotate: this.props.rotate + 'deg'},
@@ -78,7 +79,7 @@ class Ball extends Component {
 
 const styles = StyleSheet.create({
   ballContainer: {
-    paddingBottom: 100,
+    paddingBottom: perfectSize(100),
     position: 'absolute',
     backgroundColor: 'transparent',
   },
@@ -88,9 +89,9 @@ Ball.defaultProps = {
   onStart: () => {},
   x: 0,
   y: 0,
-  radius: 48,
+  radius: perfectSize(48),
   rotate: 0,
-  scale: 1,
+  scale: perfectSize(1),
 };
 
 Ball.propTypes = {

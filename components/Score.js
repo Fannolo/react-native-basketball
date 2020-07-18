@@ -37,7 +37,7 @@ class Score extends Component {
               width: Dimensions.get('window').width,
             },
           ]}>
-          {this.props.streak > 1 ? (
+          {this.props.streak > 0 ? (
             <Text
               allowFontScaling={false}
               style={[
@@ -50,7 +50,7 @@ class Score extends Component {
                   zIndex: 2,
                 },
               ]}>
-              {`X${this.props.streak}`}
+              {`x${this.props.streak}`}
             </Text>
           ) : null}
         </View>

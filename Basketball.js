@@ -195,8 +195,12 @@ class Basketball extends Component {
       ball.y <
       NET_Y + this.state.randomNetYPosition + NET_HEIGHT / 2
     ) {
+      console.log('new velocity: positive ', nextState.vx, nextVelocity.x);
+
       nextState.vx = nextVelocity.x;
     } else {
+      console.log('new velocity: negative', nextState.vx, nextVelocity.x);
+
       nextState.vx = -nextVelocity.x;
     }
     // if (ball.y < NET_Y + NET_HEIGHT / 2) {
@@ -206,7 +210,7 @@ class Basketball extends Component {
     // }
 
     nextState.vy = nextVelocity.y;
-    nextState.x = this.state.x + nextState.vx;
+    nextState.x = this.state.x + nextState.vx * 2.5;
     nextState.y = this.state.y - nextState.vy;
   }
 
@@ -236,7 +240,7 @@ class Basketball extends Component {
       mass: 2,
     };
     const netLeftBorder = {
-      x: NET_LEFT_BORDER_X + this.state.randomNetXPosition - 10,
+      x: NET_LEFT_BORDER_X + this.state.randomNetXPosition,
       y: NET_LEFT_BORDER_Y + this.state.randomNetYPosition,
       radius: NET_HEIGHT / 2,
       velocity: {
@@ -267,7 +271,7 @@ class Basketball extends Component {
     const isLeftCollision = this.circlesColliding(ball, netLeftBorder);
     if (isLeftCollision) {
       nextState.colliding = true;
-      //this.setState({colliding: true});
+      this.setState({colliding: true});
       backBoard.play();
       ReactNativeHapticFeedback.trigger('impactMedium', FeedBackOptions);
       nextState.lifecycle = LC_BOUNCING;
@@ -276,7 +280,7 @@ class Basketball extends Component {
       const isRightCollision = this.circlesColliding(ball, netRightBorder);
       if (isRightCollision) {
         nextState.colliding = true;
-        //this.setState({colliding: true});
+        this.setState({colliding: true});
         backBoard.play();
         ReactNativeHapticFeedback.trigger('impactMedium', FeedBackOptions);
         nextState.lifecycle = LC_BOUNCING;
@@ -324,7 +328,7 @@ class Basketball extends Component {
           swishSound.play();
           ReactNativeHapticFeedback.trigger('impactHeavy', FeedBackOptions);
           nextState.scored = true;
-          if (!nextState.colliding) {
+          if (!nextState.colliding && !this.state.colliding) {
             nextState.streak += 1;
             nextState.score += 1 * nextState.streak;
             //this.setState({colliding: false});
@@ -417,10 +421,10 @@ class Basketball extends Component {
             perfectSize(-100),
             perfectSize(100),
           );
-          nextState.randomNetYPosition = this.getRandomInt(
-            perfectSize(-150),
-            perfectSize(20),
-          );
+          // nextState.randomNetYPosition = this.getRandomInt(
+          //   perfectSize(-150),
+          //   perfectSize(20),
+          // );
         }
       } else {
         failure.play();
