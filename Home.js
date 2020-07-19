@@ -88,6 +88,9 @@ const HomeScreen = ({navigation}) => {
                   ? state.requestNonPersonalizedAdsOnly
                   : true,
               }}
+              onAdFailedToLoad={(error) =>
+                console.log('failed to load home banner', error)
+              }
             />
           </View>
           <View style={[styles.topContainer]}>

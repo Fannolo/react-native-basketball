@@ -30,13 +30,20 @@ import {
   RewardedAdEventType,
   AdEventType,
 } from '@react-native-firebase/admob';
-import {AdMob, failure, backBoard, swishSound, perfectSize} from './configs';
+import {
+  AdMob,
+  failure,
+  backBoard,
+  swishSound,
+  perfectSize,
+  colors,
+} from './configs';
 import AsyncStorage from '@react-native-community/async-storage';
 
 // physical variables
 const gravity = 0.6; // gravity
 const radius = perfectSize(48); // ball radius
-const rotationFactor = 10; // ball rotation factor
+const rotationFactor = perfectSize(10); // ball rotation factor
 
 // components sizes and positions
 const FLOOR_HEIGHT = perfectSize(60);
@@ -47,9 +54,9 @@ const NET_WIDTH = perfectSize(83);
 const NET_Y = Dimensions.get('window').height - perfectSize(216);
 const NET_X = Dimensions.get('window').width / 2 - NET_WIDTH / 2;
 const EMOJI_X = Dimensions.get('window').width / 2 - perfectSize(50);
-const NET_LEFT_BORDER_X = NET_X + NET_HEIGHT / 2;
+const NET_LEFT_BORDER_X = NET_X + NET_HEIGHT / perfectSize(2);
 const NET_LEFT_BORDER_Y = NET_Y;
-const NET_RIGHT_BORDER_X = NET_X + NET_WIDTH - NET_HEIGHT / 2;
+const NET_RIGHT_BORDER_X = NET_X + NET_WIDTH - NET_HEIGHT / perfectSize(2);
 const NET_RIGHT_BORDER_Y = NET_LEFT_BORDER_Y;
 
 // ball lifecycle
@@ -107,9 +114,11 @@ class Basketball extends Component {
     this.interval = setInterval(this.update.bind(this), 1000 / 60);
     this.eventListener = this.rewarded.onAdEvent((type, error, reward) => {
       if (error) {
+        console.log('Admob error: ', error);
         this.setState({adMobError: true});
       }
       if (type === RewardedAdEventType.LOADED) {
+        console.log('adMobLoaded');
         this.setState({adLoaded: true});
       }
 
@@ -133,7 +142,7 @@ class Basketball extends Component {
   onStart(angle) {
     if (this.state.lifecycle === LC_WAITING) {
       this.setState({
-        vx: angle * 0.2,
+        vx: angle * perfectSize(0.2),
         vy: perfectSize(-16),
         lifecycle: LC_STARTING,
       });
@@ -162,7 +171,7 @@ class Basketball extends Component {
     normalVector = normalVector.normalise();
 
     const tangentVector = new Vector(
-      normalVector.getY() * -1,
+      normalVector.getY() * perfectSize(-1),
       normalVector.getX(),
     );
 
@@ -175,7 +184,7 @@ class Basketball extends Component {
 
     const ballScalarNormalAfter =
       (ballScalarNormal * (ball.mass - netBorder.mass) +
-        10 * netBorder.mass * netScalarNormal) /
+        perfectSize(10) * netBorder.mass * netScalarNormal) /
       (ball.mass + netBorder.mass);
 
     const ballScalarNormalAfterVector = normalVector.multiply(
@@ -193,7 +202,7 @@ class Basketball extends Component {
       // (ball.x / 2 > NET_LEFT_BORDER_X + this.state.randomNetXPosition &&
       //   ball.x / 2 < NET_RIGHT_BORDER_X + this.state.randomNetXPosition) ||
       ball.y <
-      NET_Y + this.state.randomNetYPosition + NET_HEIGHT / 2
+      NET_Y + this.state.randomNetYPosition + NET_HEIGHT / perfectSize(2)
     ) {
       console.log('new velocity: positive ', nextState.vx, nextVelocity.x);
 
@@ -210,7 +219,7 @@ class Basketball extends Component {
     // }
 
     nextState.vy = nextVelocity.y;
-    nextState.x = this.state.x + nextState.vx * 2.5;
+    nextState.x = this.state.x + nextState.vx * perfectSize(1.5);
     nextState.y = this.state.y - nextState.vy;
   }
 
@@ -237,12 +246,12 @@ class Basketball extends Component {
           return _self.state.vy;
         },
       },
-      mass: 2,
+      mass: perfectSize(2),
     };
     const netLeftBorder = {
       x: NET_LEFT_BORDER_X + this.state.randomNetXPosition,
       y: NET_LEFT_BORDER_Y + this.state.randomNetYPosition,
-      radius: NET_HEIGHT / 2,
+      radius: NET_HEIGHT / perfectSize(2),
       velocity: {
         getX() {
           return 0;
@@ -251,12 +260,12 @@ class Basketball extends Component {
           return 0;
         },
       },
-      mass: 10,
+      mass: perfectSize(10),
     };
     const netRightBorder = {
       x: NET_RIGHT_BORDER_X + this.state.randomNetXPosition,
       y: NET_RIGHT_BORDER_Y + this.state.randomNetYPosition,
-      radius: NET_HEIGHT / 2,
+      radius: NET_HEIGHT / perfectSize(2),
       velocity: {
         getX() {
           return 0;
@@ -265,7 +274,7 @@ class Basketball extends Component {
           return 0;
         },
       },
-      mass: 10,
+      mass: perfectSize(10),
     };
 
     const isLeftCollision = this.circlesColliding(ball, netLeftBorder);
@@ -330,19 +339,22 @@ class Basketball extends Component {
           nextState.scored = true;
           if (!nextState.colliding && !this.state.colliding) {
             nextState.streak += 1;
-            nextState.score += 1 * nextState.streak;
-            //this.setState({colliding: false});
+            nextState.score =
+              nextState.streak > 1
+                ? nextState.score + 1 * nextState.streak
+                : nextState.score + 1;
+            this.setState({colliding: false});
             nextState.colliding = false;
           } else {
             nextState.score += 1;
             nextState.streak = 0;
-            //this.setState({colliding: false});
+            this.setState({colliding: false});
             nextState.colliding = false;
           }
         } else {
           nextState.streak = 0;
           nextState.scored = false;
-          //this.setState({colliding: false});
+          this.setState({colliding: false});
           nextState.colliding = false;
         }
       }
@@ -393,13 +405,14 @@ class Basketball extends Component {
 
     const outOfScreen =
       nextState.x > Dimensions.get('window').width + perfectSize(100) ||
-      nextState.x < 0 - radius * 2 - perfectSize(100);
+      nextState.x < 0 - radius * perfectSize(2) - perfectSize(100);
 
     if (
       outOfScreen === true ||
       ((nextState.lifecycle === LC_FALLING ||
         nextState.lifecycle === LC_BOUNCING) &&
-        nextState.y + radius * nextState.scale * 2 < FLOOR_Y + radius * -2)
+        nextState.y + radius * nextState.scale * perfectSize(2) <
+          FLOOR_Y + radius * perfectSize(-2))
     ) {
       if (outOfScreen && nextState.scored === null) {
         nextState.scored = false;
@@ -410,6 +423,7 @@ class Basketball extends Component {
       nextState.y = FLOOR_Y;
 
       if (nextState.scored === true) {
+        nextState.x = NET_LEFT_BORDER_X;
         nextState.x = this.randomIntFromInterval(
           4,
           Dimensions.get('window').width - radius * 2 - 4,
@@ -429,7 +443,7 @@ class Basketball extends Component {
       } else {
         failure.play();
         nextState.x = Dimensions.get('window').width / 2 - radius;
-        if (nextState.ad_played) {
+        if (nextState.ad_played || !this.state.adLoaded) {
           this.props.navigation.dispatch(CommonActions.goBack());
           //nextState.dead = true
         } else {
@@ -511,6 +525,16 @@ class Basketball extends Component {
   render() {
     return (
       <>
+        {/* <View
+          style={{
+            position: 'absolute',
+            height: '100%',
+            left: Dimensions.get('window').width / 2,
+            borderWidth: 3,
+            zIndex: 10000,
+            borderColor: colors.appleGreen,
+          }}
+        /> */}
         {Platform.OS === 'ios' && (
           <StatusBar hidden barStyle={'light-content'} />
         )}
@@ -571,7 +595,7 @@ class Basketball extends Component {
             />
           </View>
         </View>
-        {this.state.dead ? (
+        {this.state.dead && this.state.adLoaded ? (
           <View style={styles.overlayContainer}>
             <BlurView
               style={styles.overlay}
