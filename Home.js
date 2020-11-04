@@ -63,7 +63,7 @@ const HomeScreen = ({navigation}) => {
           blurAmount={32}
           reducedTransparencyFallbackColor="rgba(0,0,0,0.6)"
         />
-        <Video
+        {/* <Video
           source={require('./assets/video/backgroundvideo.mov')}
           style={styles.backgroundVideo}
           muted={true}
@@ -71,7 +71,7 @@ const HomeScreen = ({navigation}) => {
           resizeMode={'cover'}
           rate={1.0}
           ignoreSilentSwitch={'obey'}
-        />
+        /> */}
         <View style={styles.containerOfAll}>
           <View style={[styles.bannerAdContainer]}>
             <BannerAd

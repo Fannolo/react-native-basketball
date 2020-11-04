@@ -578,7 +578,7 @@ class Basketball extends Component {
               />
             </View>
           </SafeAreaView>
-          <View>
+          <View style={Platform.OS === 'android' && styles.bannerContainer}>
             <BannerAd
               size={BannerAdSize.SMART_BANNER}
               unitId={
@@ -647,6 +647,11 @@ class Basketball extends Component {
 }
 
 const styles = StyleSheet.create({
+  bannerContainer: {
+    position: 'absolute',
+    flex: 1,
+    bottom: 0,
+  },
   interstitialAdContainer: {
     width: perfectSize(200),
     zIndex: 2,
@@ -678,6 +683,7 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
+    marginBottom: Platform.OS === 'android' ? perfectSize(45) : 0,
   },
 });
 
