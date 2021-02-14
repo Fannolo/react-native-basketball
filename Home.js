@@ -9,7 +9,6 @@ import {
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {TouchableOpacity} from 'react-native-gesture-handler';
-import Video from 'react-native-video';
 import {BlurView} from '@react-native-community/blur';
 import ReactNativeHapticFeedback from 'react-native-haptic-feedback';
 import {useIsFocused} from '@react-navigation/native';
@@ -133,7 +132,7 @@ const HomeScreen = ({navigation}) => {
               });
             }}>
             <Image
-              source={require('./assets/ballbasket.png')}
+              source={require('./assets/ball/ballbasket.png')}
               style={imageSizes}
               resizeMode={'contain'}
             />

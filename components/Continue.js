@@ -92,7 +92,7 @@ export default class Continue extends Component {
             //startSound.play();
           }}>
           <Animated.Image
-            source={require('../assets/ballbasket.png')}
+            source={require('../assets/ball/ballbasket.png')}
             style={{
               width: this.state.dimensions,
               height: this.state.dimensions,
